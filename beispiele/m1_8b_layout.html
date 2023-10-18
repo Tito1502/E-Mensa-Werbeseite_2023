@@ -1,0 +1,56 @@
+<!--
+- Praktikum E-Mensa Werbeseite. Autoren:
+- Jeremy, Mainka, 3567706
+- Philip, Engels, 3569528
+-->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .grid-container1 {
+            display: grid;
+            grid-template-columns: auto;
+            padding: 10px;
+        }
+        .grid-container2 {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            padding: 10px;
+        }
+
+        .grid-container3 {
+            display: grid;
+            grid-template-columns: auto;
+            padding: 10px;
+        }
+
+        .grid-item {
+            border: 1px solid rgba(0, 0, 0, 0.8);
+            font-size: 30px;
+        }
+
+        .centered {
+            justify-self: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-container1">
+        <div class="grid-item">1</div>
+        <div class="grid-item">2</div>
+        <div class="grid-item">3</div>
+    </div>
+
+    <div class="grid-container2">
+        <div class="grid-item">1</div>
+        <div class="grid-item centered" >2</div>
+        <div class="grid-item">3</div>
+    </div>
+
+    <div class="grid-container3">
+        <div class="grid-item centered" >1</div>
+    </div>
+</body>
+</html>

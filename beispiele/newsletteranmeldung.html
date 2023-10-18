@@ -1,0 +1,68 @@
+<!--
+- Praktikum E-Mensa Werbeseite. Autoren:
+- Jeremy, Mainka, 3567706
+- Philip, Engels, 3569528
+-->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .anrede {
+            padding-bottom: 5px;
+        }
+
+        .textfelder input {
+            width: 200px;
+        }
+        fieldset {
+            padding: 20px 100px 20px 25px;
+        }
+
+    </style>
+</head>
+<body>
+    <div style="max-width: fit-content">
+        <form action="formdata.html" method="POST" >
+            <fieldset>
+                <legend>Anmeldung:</legend>
+
+                Anrede
+
+                <div class="anrede">
+                    <input type="radio" name="anrede" id="frau" value="Frau" required>
+                    <label for="frau">Frau</label><br>
+
+                    <input type="radio" name="anrede" id="herr" value="Herr" required>
+                    <label for="herr">Herr</label>
+                </div>
+                <div class="textfelder">
+                    <label for="vorname">Vorname*:</label><br>
+                    <input type="text" name="vorname" id="vorname" placeholder="Geben Sie Ihren Vornamen ein" required><br><br>
+
+                    <label for="nachname">Nachname*:</label><br>
+                    <input type="text" name="nachname" id="nachname" placeholder="Geben Sie Ihren Nachnamen ein" required><br><br>
+
+                    <label for="email">E-Mail*:</label><br>
+                    <input type="email" name="email" id="email" placeholder="Geben Sie Ihre E-Mail ein" required><br><br>
+                </div>
+                <div class="intervall">
+                    <label for="intervall">Benachrichtigungsinterval</label><br>
+                    <select name="intervall" id="intervall">
+                        <option value="Tag">Tag</option>
+                        <option value="Woche" selected>Woche</option>
+                        <option value="Monat">Monat</option>
+                    </select><br><br>
+                </div>
+
+                <div class="datenschutz">
+                    <input type="checkbox" name="datenschutz" id="datenschutz" required>
+                    <label for="datenschutz">Datenschutzhinweise gelesen</label><br><br>
+                </div>
+                <input type="submit" value="Abschicken">
+            </fieldset>
+        </form>
+    </div>
+</body>
+</html>
