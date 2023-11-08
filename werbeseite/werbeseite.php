@@ -42,7 +42,7 @@
             Kommen Sie vorbei und starten Sie Ihren Morgen bei uns in der Mensa!
         </p>
     </div>
-    <?php echo "Test";?>
+
     <div class="speisen">
         <h2 id="speisen">Köstlichkeiten, die Sie erwarten</h2>
         <table>
@@ -63,8 +63,9 @@
             foreach ($meals as $key => $meal) {
                 echo "<tr>";
                 echo "<td>" . $meal['name'] . "</td>";
-                echo "<td>" . str_replace('€', '', $meal['preis_intern']) . "</td>";
-                echo "<td>" . str_replace('€', '', $meal['preis_extern']) . "</td>";
+                echo "<td>" . $meal['preis_intern'] . "</td>";
+                echo "<td>" . $meal['preis_extern'] . "</td>";
+                echo "<td><img src='" . $meal['bild'] . "' alt='Bild'></td>";
                 echo "</tr>";
             }
             ?>

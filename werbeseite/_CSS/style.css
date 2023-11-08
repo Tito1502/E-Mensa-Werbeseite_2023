@@ -60,7 +60,9 @@ table {
     border-width: thin 0 0 thin;
 
 }
-
+table img{
+    max-width: 130px;
+}
 
 th, td {
     font-size: larger;
