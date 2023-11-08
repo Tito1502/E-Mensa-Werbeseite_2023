@@ -5,3 +5,4 @@ $meals =  [
     3 => ['name' => 'Currywurst mit Pommes', 'preis_intern' => '2,50€', 'preis_extern' => '4,90€'],
     4 => ['name' => 'Fischstäbchen mit Kartoffeln', 'preis_intern' => '4,50€', 'preis_extern' => '7,90€']
 ];
+
