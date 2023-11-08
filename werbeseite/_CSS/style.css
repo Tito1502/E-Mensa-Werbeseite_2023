@@ -16,14 +16,22 @@
 body {
     margin: 0;
 }
+nav img {
+    max-height: 45px;
+}
+
+.grid-item.logo {
+    padding: 0;
+}
 
 .grid-container {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto;
     grid-gap: 10px;
     background-color: black;
-    text-align: center;
     width: 100%;
+    align-items: center;
+    justify-items: center;
 
 }
 
