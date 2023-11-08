@@ -5,6 +5,11 @@
     margin: 0 auto 0 auto;
 }
 
+#logogroß {
+    max-width: 80vh;
+    margin-top: 25px;
+}
+
 
 
 /* Navbar */
@@ -34,7 +39,7 @@ body {
 /* Ankündigung */
 
 #ankündigung p{
-    max-width: 600px;
+    max-width: 80vh;
 }
 
 #ankündigung

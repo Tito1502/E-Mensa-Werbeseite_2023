@@ -1,4 +1,34 @@
+<?php
+// Überprüfen, ob ein POST-Request gesendet wurde
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Funktion zur Überprüfung der E-Mail-Domain
+    function isAllowedDomain($email): bool
+    {
+        $notallowedDomains = ['rcpt.at','damnthespam.at', 'wegwerfmail.de', 'trashmail.de', 'trashmail.com'];
+        $domain = explode('@', $email);
+        return in_array($domain[1], $notallowedDomains);
+    }
 
+    // Daten aus dem Formular erhalten
+    $name = trim($_POST['name']);
+    $email = $_POST['email'];
+    $sprache = $_POST['sprache'];
+    $datenschutz = isset($_POST['datenschutz']);
+
+    // Überprüfen, ob die Bedingungen erfüllt sind
+    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || isAllowedDomain($email) || !$datenschutz) {
+        echo '<script>alert("Ihre E-Mail entspricht nicht den Vorgaben oder es wurden nicht alle erforderlichen Felder ausgefüllt.");</script>';
+    } else {
+        // Daten in einer Datei speichern
+        $data = "$name, $email, $sprache\n";
+        file_put_contents('newsletter_data.txt', $data, FILE_APPEND);
+
+        // Erfolgsmeldung an den Benutzer ausgeben
+        echo '<script>alert("Vielen Dank! Sie wurden erfolgreich für den Newsletter angemeldet.");</script>';
+        echo '<script>window.location.href = "#newsletter";</script>';
+    }
+}
+?>
 <!DOCTYPE html>
 
 <!--
@@ -21,14 +51,14 @@
         <div class="grid-item"><a href="#ankündigung">Ankündigung</a></div>
         <div class="grid-item"><a href="#speisen">Speisen</a></div>
         <div class="grid-item"><a href="#zahlen">Zahlen</a></div>
-        <div class="grid-item"><a href="#kontakt">Kontakt</a></div>
+        <div class="grid-item"><a href="#newsletter">Newsletter</a></div>
         <div class="grid-item"><a href="#wichtig">Wichtig für uns</a></div>
     </div>
 </nav>
 
 <div class="main">
 
-    <img id="logogroß" src="" alt="Logo">
+    <img id="logogroß" src="IMG/banner.jpg" alt="Logo">
 
     <div id="ankündigung">
         <h2>Bald gibt es Essen auch Online ;)</h2>
@@ -86,34 +116,36 @@
     </div>
 
     <div class="newsletter">
-        <h2 id="kontakt">Interesse geweckt? Wir informieren Sie!</h2>
-        <div class="newsletter-grid">
-            <div class="textfelder">
-                <div>
-                    <label for="name">Ihr Name:</label><br>
-                    <input type="text" name="name" id="name" placeholder="Vorname" required><br><br>
+        <h2 id="newsletter">Interesse geweckt? Wir informieren Sie!</h2>
+        <form method="POST" action="werbeseite.php">
+            <div class="newsletter-grid">
+                <div class="textfelder">
+                    <div>
+                        <label for="name">Ihr Name:</label><br>
+                        <input type="text" name="name" id="name" placeholder="Vorname" required><br><br>
+                    </div>
+                    <div>
+                        <label for="email">Ihre E-Mail:</label><br>
+                        <input type="email" name="email" id="email" required><br><br>
+                    </div>
                 </div>
-                <div>
-                    <label for="email">Ihre E-Mail:</label><br>
-                    <input type="email" name="email" id="email" required><br><br>
+
+                <div class="sprache">
+                    <label for="sprache">Newsletter bitte in: </label><br>
+                    <select name="sprache" id="sprache">
+                        <option value="Deutsch" selected>Deutsch</option>
+                        <option value="Englisch">Englisch</option>
+                    </select><br><br>
                 </div>
-            </div>
 
-            <div class="sprache">
-                <label for="sprache">Newsletter bitte in: </label><br>
-                <select name="sprache" id="sprache">
-                    <option value="Deutsch" selected>Deutsch</option>
-                    <option value="Englisch">Englisch</option>
-                </select><br><br>
-            </div>
+                <div class="datenschutz">
+                    <input type="checkbox" name="datenschutz" id="datenschutz" required>
+                    <label for="datenschutz">Den Datenschutzbestimmungen stimme ich zu</label><br><br>
+                </div>
 
-            <div class="datenschutz">
-                <input type="checkbox" name="datenschutz" id="datenschutz" required>
-                <label for="datenschutz">Den Datenschutzbestimmungen stimme ich zu</label><br><br>
+                <input type="submit" value="Zum Newsletter anmelden" class="submit">
             </div>
-
-            <input type="submit" value="Zum Newsletter anmelden" class="submit" disabled>
-        </div>
+        </form>
     </div>
 
 
