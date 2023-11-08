@@ -1,4 +1,34 @@
+<?php
+// Überprüfen, ob ein POST-Request gesendet wurde
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Funktion zur Überprüfung der E-Mail-Domain
+    function isAllowedDomain($email): bool
+    {
+        $notallowedDomains = ['rcpt.at','damnthespam.at', 'wegwerfmail.de', 'trashmail.de', 'trashmail.com'];
+        $domain = explode('@', $email);
+        return in_array($domain[1], $notallowedDomains);
+    }
 
+    // Daten aus dem Formular erhalten
+    $name = trim($_POST['name']);
+    $email = $_POST['email'];
+    $sprache = $_POST['sprache'];
+    $datenschutz = isset($_POST['datenschutz']);
+
+    // Überprüfen, ob die Bedingungen erfüllt sind
+    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || isAllowedDomain($email) || !$datenschutz) {
+        echo '<script>alert("Ihre E-Mail entspricht nicht den Vorgaben oder es wurden nicht alle erforderlichen Felder ausgefüllt.");</script>';
+    } else {
+        // Daten in einer Datei speichern
+        $data = "$name, $email, $sprache\n";
+        file_put_contents('newsletter_data.txt', $data, FILE_APPEND);
+
+        // Erfolgsmeldung an den Benutzer ausgeben
+        echo '<script>alert("Vielen Dank! Sie wurden erfolgreich für den Newsletter angemeldet.");</script>';
+        echo '<script>window.location.href = "#newsletter";</script>';
+    }
+}
+?>
 <!DOCTYPE html>
 
 <!--
@@ -11,167 +41,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Werbeseite</title>
-    <style>
-        /* ... */
-
-        .main {
-            width: fit-content;
-            margin: 0 auto 0 auto;
-        }
-
-
-
-        /* Navbar */
-        body {
-            margin: 0;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: auto auto auto auto auto auto;
-            grid-gap: 10px;
-            background-color: black;
-            text-align: center;
-            width: 100%;
-
-        }
-
-        .grid-container a{
-            text-decoration: none;
-            color: white;
-        }
-
-        .grid-item{
-            padding: 10px;
-        }
-
-        /* Ankündigung */
-
-        #ankündigung p{
-            max-width: 600px;
-        }
-
-        #ankündigung
-        {
-            width: fit-content;
-            margin-bottom: 50px;
-        }
-
-        /* Speisen */
-
-        .speisen {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-
-        table,td, th{
-            border: thin solid #a0a0a0;
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-            border-width: thin 0 0 thin;
-
-        }
-
-
-        th, td {
-            font-size: larger;
-            font-weight: normal;
-            text-align: center;
-        }
-
-
-        td:first-child {
-            text-align: left;
-            max-width: 400px;
-        }
-
-        th {
-            background-color: #f1f3f4;
-            font-weight: 700;
-        }
-
-        /*Platzhalter für Zahlen*/
-        .platzhalter {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-        .platzhalter input {
-            width: 8px;
-        }
-
-        /* Newsletter */
-
-        .newsletter-grid {
-            display: grid;
-            grid-template-columns: auto auto;
-            width: fit-content;
-            margin-bottom: 50px;
-        }
-
-        .textfelder {
-            display: flex;
-            width: fit-content;
-        }
-
-        .textfelder div{
-            margin-right: 15px;
-        }
-
-        .textfelder input {
-            width: 120px;
-        }
-
-
-
-        .datenschutz {
-            margin-right: 15px;
-        }
-
-        .submit {
-            height: fit-content;
-        }
-
-        /* Liste */
-        .liste
-        {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-
-        /* Abschied */
-        #abschied
-        {
-            text-align: center;
-        }
-
-        h2 #abschied
-        {
-            text-indent: 0;
-            width: fit-content;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="_CSS/style.css">
 
 </head>
 <body>
 <nav>
     <div class="grid-container" id="mytopnav">
-        <div class="grid-item"><a href="#logogroß"><img src="" alt="Logo"></a></div>
+        <div class="grid-item logo"><a href="#logogroß"><img src="IMG/logo-studentenwerk.png" alt="Logo"></a></div>
         <div class="grid-item"><a href="#ankündigung">Ankündigung</a></div>
         <div class="grid-item"><a href="#speisen">Speisen</a></div>
         <div class="grid-item"><a href="#zahlen">Zahlen</a></div>
-        <div class="grid-item"><a href="#kontakt">Kontakt</a></div>
+        <div class="grid-item"><a href="#newsletter">Newsletter</a></div>
         <div class="grid-item"><a href="#wichtig">Wichtig für uns</a></div>
     </div>
 </nav>
 
 <div class="main">
 
-    <img id="logogroß" src="" alt="Logo">
+    <img id="logogroß" src="IMG/banner.jpg" alt="Logo">
 
     <div id="ankündigung">
         <h2>Bald gibt es Essen auch Online ;)</h2>
@@ -197,21 +84,21 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Rindfleisch mit Bambus, Kaiserschoten und roter Paprika, dazu Mie Nudeln</td>
-                <td>3,50</td>
-                <td>6,20</td>
-            </tr>
-            <tr>
-                <td>Spinatrisotto mit kleinen Samosateigecken und gemischter Salat</td>
-                <td>2,90</td>
-                <td>5,30</td>
-            </tr>
-            <tr>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-            </tr>
+            <?php
+            // Include the array.php file
+            $meals = [];
+            include 'array_gerichte.php';
+
+            // Iterate through the $meals array and populate the table
+            foreach ($meals as $key => $meal) {
+                echo "<tr>";
+                echo "<td>" . $meal['name'] . "</td>";
+                echo "<td>" . $meal['preis_intern'] . "</td>";
+                echo "<td>" . $meal['preis_extern'] . "</td>";
+                echo "<td><img src='" . $meal['bild'] . "' alt='Bild'></td>";
+                echo "</tr>";
+            }
+            ?>
             </tbody>
         </table>
     </div>
@@ -229,34 +116,36 @@
     </div>
 
     <div class="newsletter">
-        <h2 id="kontakt">Interesse geweckt? Wir informieren Sie!</h2>
-        <div class="newsletter-grid">
-            <div class="textfelder">
-                <div>
-                    <label for="name">Ihr Name:</label><br>
-                    <input type="text" name="name" id="name" placeholder="Vorname" required><br><br>
+        <h2 id="newsletter">Interesse geweckt? Wir informieren Sie!</h2>
+        <form method="POST" action="werbeseite.php">
+            <div class="newsletter-grid">
+                <div class="textfelder">
+                    <div>
+                        <label for="name">Ihr Name:</label><br>
+                        <input type="text" name="name" id="name" placeholder="Vorname" required><br><br>
+                    </div>
+                    <div>
+                        <label for="email">Ihre E-Mail:</label><br>
+                        <input type="email" name="email" id="email" required><br><br>
+                    </div>
                 </div>
-                <div>
-                    <label for="email">Ihre E-Mail:</label><br>
-                    <input type="email" name="email" id="email" required><br><br>
+
+                <div class="sprache">
+                    <label for="sprache">Newsletter bitte in: </label><br>
+                    <select name="sprache" id="sprache">
+                        <option value="Deutsch" selected>Deutsch</option>
+                        <option value="Englisch">Englisch</option>
+                    </select><br><br>
                 </div>
-            </div>
 
-            <div class="sprache">
-                <label for="sprache">Newsletter bitte in: </label><br>
-                <select name="sprache" id="sprache">
-                    <option value="Deutsch" selected>Deutsch</option>
-                    <option value="Englisch">Englisch</option>
-                </select><br><br>
-            </div>
+                <div class="datenschutz">
+                    <input type="checkbox" name="datenschutz" id="datenschutz" required>
+                    <label for="datenschutz">Den Datenschutzbestimmungen stimme ich zu</label><br><br>
+                </div>
 
-            <div class="datenschutz">
-                <input type="checkbox" name="datenschutz" id="datenschutz" required>
-                <label for="datenschutz">Den Datenschutzbestimmungen stimme ich zu</label><br><br>
+                <input type="submit" value="Zum Newsletter anmelden" class="submit">
             </div>
-
-            <input type="submit" value="Zum Newsletter anmelden" class="submit" disabled>
-        </div>
+        </form>
     </div>
 
 
