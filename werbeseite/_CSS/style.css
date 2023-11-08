@@ -1,0 +1,140 @@
+/* ... */
+
+.main {
+    width: fit-content;
+    margin: 0 auto 0 auto;
+}
+
+
+
+/* Navbar */
+body {
+    margin: 0;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto;
+    grid-gap: 10px;
+    background-color: black;
+    text-align: center;
+    width: 100%;
+
+}
+
+.grid-container a{
+    text-decoration: none;
+    color: white;
+}
+
+.grid-item{
+    padding: 10px;
+}
+
+/* Ankündigung */
+
+#ankündigung p{
+    max-width: 600px;
+}
+
+#ankündigung
+{
+    width: fit-content;
+    margin-bottom: 50px;
+}
+
+/* Speisen */
+
+.speisen {
+    width: fit-content;
+    margin: 0 auto 50px auto;
+}
+
+table,td, th{
+    border: thin solid #a0a0a0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    border-width: thin 0 0 thin;
+
+}
+
+
+th, td {
+    font-size: larger;
+    font-weight: normal;
+    text-align: center;
+}
+
+
+td:first-child {
+    text-align: left;
+    max-width: 400px;
+}
+
+th {
+    background-color: #f1f3f4;
+    font-weight: 700;
+}
+
+/*Platzhalter für Zahlen*/
+.platzhalter {
+    width: fit-content;
+    margin: 0 auto 50px auto;
+}
+.platzhalter input {
+    width: 8px;
+}
+
+/* Newsletter */
+
+.newsletter-grid {
+    display: grid;
+    grid-template-columns: auto auto;
+    width: fit-content;
+    margin-bottom: 50px;
+}
+
+.textfelder {
+    display: flex;
+    width: fit-content;
+}
+
+.textfelder div{
+    margin-right: 15px;
+}
+
+.textfelder input {
+    width: 120px;
+}
+
+
+
+.datenschutz {
+    margin-right: 15px;
+}
+
+.submit {
+    height: fit-content;
+}
+
+/* Liste */
+.liste
+{
+    width: fit-content;
+    margin: 0 auto 50px auto;
+}
+
+/* Abschied */
+#abschied
+{
+    text-align: center;
+}
+
+h2 #abschied
+{
+    text-indent: 0;
+    width: fit-content;
+}

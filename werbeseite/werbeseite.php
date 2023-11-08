@@ -11,150 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Werbeseite</title>
-    <style>
-        /* ... */
-
-        .main {
-            width: fit-content;
-            margin: 0 auto 0 auto;
-        }
-
-
-
-        /* Navbar */
-        body {
-            margin: 0;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: auto auto auto auto auto auto;
-            grid-gap: 10px;
-            background-color: black;
-            text-align: center;
-            width: 100%;
-
-        }
-
-        .grid-container a{
-            text-decoration: none;
-            color: white;
-        }
-
-        .grid-item{
-            padding: 10px;
-        }
-
-        /* Ankündigung */
-
-        #ankündigung p{
-            max-width: 600px;
-        }
-
-        #ankündigung
-        {
-            width: fit-content;
-            margin-bottom: 50px;
-        }
-
-        /* Speisen */
-
-        .speisen {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-
-        table,td, th{
-            border: thin solid #a0a0a0;
-        }
-
-        table {
-            border-collapse: collapse;
-            border-spacing: 0;
-            border-width: thin 0 0 thin;
-
-        }
-
-
-        th, td {
-            font-size: larger;
-            font-weight: normal;
-            text-align: center;
-        }
-
-
-        td:first-child {
-            text-align: left;
-            max-width: 400px;
-        }
-
-        th {
-            background-color: #f1f3f4;
-            font-weight: 700;
-        }
-
-        /*Platzhalter für Zahlen*/
-        .platzhalter {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-        .platzhalter input {
-            width: 8px;
-        }
-
-        /* Newsletter */
-
-        .newsletter-grid {
-            display: grid;
-            grid-template-columns: auto auto;
-            width: fit-content;
-            margin-bottom: 50px;
-        }
-
-        .textfelder {
-            display: flex;
-            width: fit-content;
-        }
-
-        .textfelder div{
-            margin-right: 15px;
-        }
-
-        .textfelder input {
-            width: 120px;
-        }
-
-
-
-        .datenschutz {
-            margin-right: 15px;
-        }
-
-        .submit {
-            height: fit-content;
-        }
-
-        /* Liste */
-        .liste
-        {
-            width: fit-content;
-            margin: 0 auto 50px auto;
-        }
-
-        /* Abschied */
-        #abschied
-        {
-            text-align: center;
-        }
-
-        h2 #abschied
-        {
-            text-indent: 0;
-            width: fit-content;
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="_CSS/style.css">
 
 </head>
 <body>
@@ -185,7 +42,7 @@
             Kommen Sie vorbei und starten Sie Ihren Morgen bei uns in der Mensa!
         </p>
     </div>
-
+    <?php echo "Test";?>
     <div class="speisen">
         <h2 id="speisen">Köstlichkeiten, die Sie erwarten</h2>
         <table>
@@ -197,21 +54,20 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Rindfleisch mit Bambus, Kaiserschoten und roter Paprika, dazu Mie Nudeln</td>
-                <td>3,50</td>
-                <td>6,20</td>
-            </tr>
-            <tr>
-                <td>Spinatrisotto mit kleinen Samosateigecken und gemischter Salat</td>
-                <td>2,90</td>
-                <td>5,30</td>
-            </tr>
-            <tr>
-                <td>...</td>
-                <td>...</td>
-                <td>...</td>
-            </tr>
+            <?php
+            // Include the array.php file
+            $meals = [];
+            include 'array_gerichte.php';
+
+            // Iterate through the $meals array and populate the table
+            foreach ($meals as $key => $meal) {
+                echo "<tr>";
+                echo "<td>" . $meal['name'] . "</td>";
+                echo "<td>" . str_replace('€', '', $meal['preis_intern']) . "</td>";
+                echo "<td>" . str_replace('€', '', $meal['preis_extern']) . "</td>";
+                echo "</tr>";
+            }
+            ?>
             </tbody>
         </table>
     </div>
