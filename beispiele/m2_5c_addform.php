@@ -7,7 +7,7 @@
 */
 
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
     <title>Rechner</title>
 </head>
