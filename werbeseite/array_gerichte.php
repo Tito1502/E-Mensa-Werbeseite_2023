@@ -1,3 +1,9 @@
+<!--
+- Praktikum E-Mensa Werbeseite. Autoren:
+- Jeremy, Mainka, 3567706
+- Philip, Engels, 3569528
+- Bol, Daudov, 3539110
+-->
 <?php
 $meals =  [
     1 => ['name' => 'Hühnersuppentopf', 'preis_intern' => '2,00€', 'preis_extern' => '3,50€', 'bild' => 'IMG/huhnersuppentopf.jpg'],

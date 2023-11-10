@@ -36,6 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 - Praktikum E-Mensa Werbeseite. Autoren:
 - Jeremy, Mainka, 3567706
 - Philip, Engels, 3569528
+- Bol, Daudov, 3539110
 -->
 
 <html lang="en">

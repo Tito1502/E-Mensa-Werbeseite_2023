@@ -1,10 +1,10 @@
+<!--
+- Praktikum E-Mensa Werbeseite. Autoren:
+- Jeremy, Mainka, 3567706
+- Philip, Engels, 3569528
+- Bol, Daudov, 3539110
+-->
 <?php
-/**
- * Praktikum DBWT. Autoren:
- * Bol, Daudov, 3539110
- * Vorname2, Nachname2, Matrikelnummer2
- *  Vorname2, Nachname2, Matrikelnummer2
- */
 $famousMeals = [
     1 => ['name' => 'Currywurst mit Pommes',
         'winner' => [2001, 2003, 2007, 2010, 2020]],
