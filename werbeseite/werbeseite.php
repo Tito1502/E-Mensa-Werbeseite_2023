@@ -25,7 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Erfolgsmeldung an den Benutzer ausgeben
         echo '<script>alert("Vielen Dank! Sie wurden erfolgreich für den Newsletter angemeldet.");</script>';
-        echo '<script>window.location.href = "#newsletter";</script>';
+        echo '<script>window.location.replace("werbeseite.php");</script>';
+        exit;
     }
 }
 ?>
@@ -104,14 +105,87 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
 
+    <?php
+    // Funktion zum Inkrementieren des Besucherzählers
+    function incrementVisitorCounter(): int
+    {
+        $counterFile = 'visitor_counter.txt';
 
+        if (!file_exists($counterFile)) {
+            file_put_contents($counterFile, 0);
+        }
+
+        $count = (int)file_get_contents($counterFile);
+        $count++;
+        file_put_contents($counterFile, $count);
+
+        return $count;
+    }
+    // Funktion zum Abrufen der Anzahl der gespeicherten Gerichte
+    function getVisitorCount(): int
+    {
+        $counterFile = 'visitor_counter.txt';
+
+        if (!file_exists($counterFile)) {
+            file_put_contents($counterFile, 0);
+        }
+
+        return (int)file_get_contents($counterFile);
+    }
+
+    // Funktion zum Abrufen der Anzahl der gespeicherten Gerichte
+    function getNumberOfDishes(): int
+    {
+        $meals = [];
+        include 'array_gerichte.php';
+
+        return sizeof($meals);
+    }
+
+    // Funktion zum Abrufen der Anzahl der gespeicherten Newsletter-Anmeldungen
+    function getNewsletterSubscriptions(): int
+    {
+        $counterFile = 'newsletter_data.txt';
+
+        if (!file_exists($counterFile)) {
+            return 0;
+        }
+        $lines = file($counterFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        return count($lines);
+    }
+
+    // Funktion zum Überprüfen und Inkrementieren des Besucherzählers pro IP pro Tag
+    function incrementVisitorCounterByIP(): void
+    {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $counterFile = 'visitor_counter_by_ip.txt';
+
+        // Überprüfen, ob die IP bereits gezählt wurde
+        if (!file_exists($counterFile) || strpos(file_get_contents($counterFile), $ip) === false) {
+            // IP wurde noch nicht gezählt, daher Zähler inkrementieren
+            file_put_contents($counterFile, $ip . PHP_EOL, FILE_APPEND);
+
+            // Den allgemeinen Besucherzähler ebenfalls inkrementieren
+            incrementVisitorCounter();
+        }
+    }
+
+    // Aufrufen der Funktion zum Inkrementieren des Besucherzählers pro IP pro Tag
+    incrementVisitorCounterByIP();
+
+    // Statistiken auf der Webseite anzeigen
+    $visitorCount = getVisitorCount();
+    $dishCount = getNumberOfDishes();
+    $newsletterCount = getNewsletterSubscriptions();
+    ?>
 
     <div>
         <h2 id="zahlen">E-Mensa in Zahlen</h2>
         <div class="platzhalter">
-            <input placeholder="X" disabled> Besuche
-            <input placeholder="Y" disabled> Anmeldungen zum Newsletter
-            <input placeholder="Z" disabled> Speisen
+            <span class="zahl"><?php echo $visitorCount; ?></span> Besuche
+            <span class="zahl"><?php echo $newsletterCount; ?></span> Anmeldungen zum Newsletter
+            <span class="zahl"><?php echo $dishCount; ?></span> Speisen
         </div>
     </div>
 

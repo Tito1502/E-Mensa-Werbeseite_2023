@@ -10,6 +10,15 @@
     margin-top: 25px;
 }
 
+.zahl {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #f0f0f0;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
 
 
 /* Navbar */
