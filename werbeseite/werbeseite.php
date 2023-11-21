@@ -107,42 +107,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
     <?php
-    // Funktion zum Inkrementieren des Besucherzählers
-    function incrementVisitorCounter(): int
-    {
-        $counterFile = 'visitor_counter.txt';
-
-        if (!file_exists($counterFile)) {
-            file_put_contents($counterFile, 0);
-        }
-
-        $count = (int)file_get_contents($counterFile);
-        $count++;
-        file_put_contents($counterFile, $count);
-
-        return $count;
-    }
-    // Funktion zum Abrufen der Anzahl der gespeicherten Gerichte
-    function getVisitorCount(): int
-    {
-        $counterFile = 'visitor_counter.txt';
-
-        if (!file_exists($counterFile)) {
-            file_put_contents($counterFile, 0);
-        }
-
-        return (int)file_get_contents($counterFile);
-    }
-
-    // Funktion zum Abrufen der Anzahl der gespeicherten Gerichte
-    function getNumberOfDishes(): int
-    {
-        $meals = [];
-        include 'array_gerichte.php';
-
-        return sizeof($meals);
-    }
-
     // Funktion zum Abrufen der Anzahl der gespeicherten Newsletter-Anmeldungen
     function getNewsletterSubscriptions(): int
     {
@@ -156,28 +120,69 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         return count($lines);
     }
 
-    // Funktion zum Überprüfen und Inkrementieren des Besucherzählers pro IP pro Tag
-    function incrementVisitorCounterByIP(): void
-    {
-        $ip = $_SERVER['REMOTE_ADDR'];
-        $counterFile = 'visitor_counter_by_ip.txt';
+    $link=mysqli_connect("localhost", // Host der Datenbank
+        "root",                 // Benutzername zur Anmeldung
+        "",    // Passwort
+        "emensawerbeseite"      // Auswahl der Datenbanken (bzw. des Schemas)
+    // optional port der Datenbank
+    );
 
-        // Überprüfen, ob die IP bereits gezählt wurde
-        if (!file_exists($counterFile) || strpos(file_get_contents($counterFile), $ip) === false) {
-            // IP wurde noch nicht gezählt, daher Zähler inkrementieren
-            file_put_contents($counterFile, $ip . PHP_EOL, FILE_APPEND);
-
-            // Den allgemeinen Besucherzähler ebenfalls inkrementieren
-            incrementVisitorCounter();
-        }
+    if (!$link) {
+        echo "Verbindung fehlgeschlagen: ", mysqli_connect_error();
+        exit();
     }
 
-    // Aufrufen der Funktion zum Inkrementieren des Besucherzählers pro IP pro Tag
-    incrementVisitorCounterByIP();
+    $sql = "SELECT count(*) as count FROM gericht";
 
-    // Statistiken auf der Webseite anzeigen
-    $visitorCount = getVisitorCount();
-    $dishCount = getNumberOfDishes();
+    $result = mysqli_query($link, $sql);
+    if (!$result) {
+        echo "Fehler während der Abfrage:  ", mysqli_error($link);
+        exit();
+    }
+
+    $row = $result->fetch_assoc();
+
+
+    $dishCount = $row['count'];
+
+    mysqli_free_result($result);
+
+    // Besucher anzahl
+
+    $ipAdresse = $_SERVER['REMOTE_ADDR'];
+    $datumBesuch = date("Y-m-d");
+
+    // MySQLi INSERT INTO-Abfrage
+    $sql = "SELECT * FROM Besucher WHERE IPAdresse = '$ipAdresse'";
+    $result = mysqli_query($link, $sql);
+    $existingRecord = $result->fetch_assoc();
+
+    if ($existingRecord) {
+        // IP vorhanden, Datum aktualisieren
+        mysqli_query($link, "UPDATE Besucher SET DatumBesuch = '$datumBesuch' WHERE IPAdresse = '$ipAdresse'");
+    } else {
+        // IP nicht vorhanden, neuen Datensatz einfügen
+        mysqli_query($link, "INSERT INTO Besucher (IPAdresse, DatumBesuch) VALUES ('$ipAdresse', '$datumBesuch')");
+    }
+    mysqli_free_result($result);
+
+    $sql = "SELECT count(*) as count FROM besucher";
+
+    $result = mysqli_query($link, $sql);
+    if (!$result) {
+        echo "Fehler während der Abfrage:  ", mysqli_error($link);
+        exit();
+    }
+
+    $row = $result->fetch_assoc();
+
+
+    $visitorCount = $row['count'];
+
+    mysqli_free_result($result);
+    mysqli_close($link);
+
+    // Newsletter
     $newsletterCount = getNewsletterSubscriptions();
     ?>
 
