@@ -20,10 +20,11 @@ function printWinners($meals)
 {
     foreach ($meals as $key => $meal)
     {
-        echo "$key. {$meal['name']}<br>&emsp;"; // Mahlzeit name
+        //echo '<p class = "name">'. $key. {$meal['name']}.'<br>&emsp</p>'; // Mahlzeit name
+        echo '<p style="padding: unset;margin: unset" > ' . $key . '. ' . $meal['name'] .'</p>';
         $winningYears = (array)$meal['winner']; // Konvertiert in Array wegen letzen eintrages
         sort($winningYears); // Sortiert die Gewinnerjahre
-        echo  implode(', ', $winningYears)."<br>"; // Gibt die sortierten Gewinnerjahre aus
+        echo  '<p style="padding: unset;margin: unset;padding-left: 20px;">'.implode(', ', $winningYears).'</p>'; // Gibt die sortierten Gewinnerjahre aus
     }
 }
 
@@ -47,5 +48,6 @@ function printNoWinners($meals)
     return $yearnowin;
 }
 $nowinners = printNoWinners($famousMeals);
-echo "&emsp;".implode("<br>&emsp;",$nowinners)
+
+echo "<br>".implode("<br>&emsp;",$nowinners)
 ?>
