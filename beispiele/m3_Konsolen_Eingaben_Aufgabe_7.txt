@@ -1,0 +1,57 @@
+gericht:
+ALTER TABLE gericht
+ADD CONSTRAINT name_unique UNIQUE(name);
+
+
+
+
+
+
+
+gericht_hat_allergen:
+
+Referenz von code auf code von der Tabelle allergen
+
+ALTER TABLE gericht_hat_allergen
+ADD CONSTRAINT FK_code FOREIGN KEY( code )
+REFERENCES allergen( code );
+
+
+
+Referenz von gericht_id auf id von der Tabelle gericht
+
+ALTER TABLE gericht_hat_allergen
+ADD CONSTRAINT FK_gid1 FOREIGN KEY( gericht_id )
+REFERENCES gericht( id );
+
+
+
+
+
+
+gericht_hat_kategorie:
+
+Referenz von gericht_id auf id von der Tabelle gericht
+
+ALTER TABLE gericht_hat_kategorie
+ADD CONSTRAINT FK_gid2 FOREIGN KEY( gericht_id )
+REFERENCES gericht( id );
+
+
+
+Referenz von kategorie_id auf id von der Tabelle kategorie
+
+ALTER TABLE gericht_hat_kategorie
+ADD CONSTRAINT FK_kid FOREIGN KEY( kategorie_id )
+REFERENCES kategorie( id );
+
+
+
+
+
+
+
+zur Überprüfung:
+DESCRIBE gericht;
+DESCRIBE gericht_hat_allergen;
+DESCRIBE gericht_hat_kategorie;
