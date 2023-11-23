@@ -1,0 +1,25 @@
+//1
+USE emensawerbeseite;
+
+select g.name as gericht, a.name as allergen from gericht g left join gericht_hat_allergen ga on g.id = ga.gericht_id left join allergen a on ga.code = a.code;
+
+//2 einfach left zu right machen, so das allergene alle ausgewählt werden
+USE emensawerbeseite;
+
+select g.name as gericht, a.name as allergen from gericht g right join gericht_hat_allergen ga on g.id = ga.gericht_id left join allergen a on ga.code = a.code;
+
+//3 beim 2ten join auch left zu right wechseln
+USE emensawerbeseite;
+
+select g.name as gericht, a.name as allergen from gericht g right join gericht_hat_allergen ga on g.id = ga.gericht_id right join allergen a on ga.code = a.code;
+
+//4
+
+USE emensawerbeseite;
+
+SELECT k.name AS kategorie_name, COUNT(gk.gericht_id) AS anzahl_gerichte from kategorie k right join gericht_hat_kategorie gk on k.id = gk.kategorie_id group by k.name order by anzahl_gerichte asc;
+
+//5
+USE emensawerbeseite;
+
+SELECT k.name AS kategorie_name, COUNT(gk.gericht_id) AS anzahl_gerichte from kategorie k left join gericht_hat_kategorie gk on k.id = gk.kategorie_id group by k.name having count(gk.gericht_id) > 2 order by anzahl_gerichte asc;

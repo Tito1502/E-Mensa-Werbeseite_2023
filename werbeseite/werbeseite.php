@@ -77,7 +77,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     <div class="speisen">
         <h2 id="speisen">Köstlichkeiten, die Sie erwarten</h2>
-        <table>
+        <?php
+        //m3 5.1
+        include 'm3_5.1_selectmealfnc.php';
+        //$sql = "select name, preisintern, preisextern from gericht order by name asc limit 5;";
+        //a5.3
+        $sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5;";
+        selectmealfromdb($sql, true);
+        ?>
+        <!-- code von Jeremy-->
+        <!--<table>
             <thead>
             <tr>
                 <th></th>
@@ -88,21 +97,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <tbody>
             <?php
             // Include the array.php file
-            $meals = [];
-            include 'array_gerichte.php';
-
-            // Iterate through the $meals array and populate the table
-            foreach ($meals as $key => $meal) {
-                echo "<tr>";
-                echo "<td>" . $meal['name'] . "</td>";
-                echo "<td>" . $meal['preis_intern'] . "</td>";
-                echo "<td>" . $meal['preis_extern'] . "</td>";
-                echo "<td><img src='" . $meal['bild'] . "' alt='Bild'></td>";
-                echo "</tr>";
-            }
+        /*
+     $meals = [];
+     include 'array_gerichte.php';
+     // Iterate through the $meals array and populate the table
+     foreach ($meals as $key => $meal) {
+         echo "<tr>";
+         echo "<td>" . $meal['name'] . "</td>";
+         echo "<td>" . $meal['preis_intern'] . "</td>";
+         echo "<td>" . $meal['preis_extern'] . "</td>";
+         echo "<td><img src='" . $meal['bild'] . "' alt='Bild'></td>";
+         echo "</tr>";
+     }*/
             ?>
             </tbody>
-        </table>
+        </table>-->
     </div>
 
 
@@ -122,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $link=mysqli_connect("localhost", // Host der Datenbank
         "root",                 // Benutzername zur Anmeldung
-        "",    // Passwort
+        "0000",    // Passwort
         "emensawerbeseite"      // Auswahl der Datenbanken (bzw. des Schemas)
     // optional port der Datenbank
     );
