@@ -1,12 +1,12 @@
 <?php
 //funktion um eine tabelle von gerichten anzuzeigen
 //if $show gib die allergene der gerichte ezusätzlich aus 
-function selectmealfromdb($sql, $show)
+function selectmealfromdb($sql, $show): void
 {
     $link = mysqli_connect(
         "localhost",
         "root",
-        "",
+        "blockja",
         "emensawerbeseite",
         3306
     );
