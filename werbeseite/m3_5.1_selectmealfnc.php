@@ -1,5 +1,6 @@
 <?php
-
+//funktion um eine tabelle von gerichten anzuzeigen
+//if $show gib die allergene der gerichte ezusätzlich aus 
 function selectmealfromdb($sql, $show)
 {
     $link = mysqli_connect(
@@ -21,10 +22,11 @@ function selectmealfromdb($sql, $show)
         if (mysqli_num_rows($result) > 0) {
             $codearray =[];
             echo '<table >';
+            //if $show brauchen wir zusätzliche spalte für allergene
             if($show) echo '<tr><th>Name</th><th>Preis intern</th><th>Preis extern</th><th>Allergencode</th></tr>';
             else echo '<tr><th>Name</th><th>Preis intern</th><th>Preis extern</th></tr>';
             while ($row = mysqli_fetch_assoc($result)) {
-
+            //gibt die reihen der gerichte aus
                 echo "<tr>";
                 echo "<td>" . $row["name"] . "</td>";
                 echo "<td>" . $row["preisintern"] . "&euro;</td>";
@@ -42,13 +44,13 @@ function selectmealfromdb($sql, $show)
                         $current_row++;
                         if($row2["name"] == $row["name"] && $row2["code"] != NULL) {
                             echo $row2["code"];
-                            if(!in_array($row2["code"],$codearray))$codearray[] =  $row2["code"];}
+                            if(!in_array($row2["code"],$codearray))$codearray[] =  $row2["code"];} //speichert allergencodes ohne duplikate 
                         if($row2["name"] == $row["name"] && $row2["code"] != NULL && $current_row != $total_rows) echo ", ";
                     }
                     echo "</td>";
                 }
                 echo "</tr>";
-                sort($codearray);
+                sort($codearray); //sortiert für schöne ausgabe
             }
 
             echo '</table>';
@@ -59,8 +61,8 @@ function selectmealfromdb($sql, $show)
                 $sql = "select name, code from allergen;";
                 $codetoallergen = mysqli_query($link, $sql);
                 $array_result = mysqli_fetch_all($codetoallergen, MYSQLI_ASSOC);
-                echo "<ul>";
-
+                echo "<h3>Liste der Allergene</h3><ul>";
+                
                 foreach ($codearray as $code) {
                     foreach ($array_result as $item) {
                         if ($item['code'] === $code) {
