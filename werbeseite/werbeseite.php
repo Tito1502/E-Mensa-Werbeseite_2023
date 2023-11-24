@@ -2,11 +2,11 @@
 // Überprüfen, ob ein POST-Request gesendet wurde
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Funktion zur Überprüfung der E-Mail-Domain
-    function isAllowedDomain($email): bool
+    function isnotAllowedDomain($email): bool
     {
         $notallowedDomains = ['rcpt.at','damnthespam.at', 'wegwerfmail.de', 'trashmail.de', 'trashmail.com'];
         $domain = explode('@', $email);
-        return in_array($domain[1], $notallowedDomains);
+        return in_array(strtolower($domain[1]), $notallowedDomains);
     }
 
     // Daten aus dem Formular erhalten
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $datenschutz = isset($_POST['datenschutz']);
 
     // Überprüfen, ob die Bedingungen erfüllt sind
-    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || isAllowedDomain($email) || !$datenschutz) {
+    if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || isnotAllowedDomain($email) || !$datenschutz) {
         echo '<script>alert("Ihre E-Mail entspricht nicht den Vorgaben oder es wurden nicht alle erforderlichen Felder ausgefüllt.");</script>';
     } else {
         // Daten in einer Datei speichern
@@ -121,14 +121,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     {
         $counterFile = 'newsletter_data.txt';
 
+        // Überprüfen, ob die Datei existiert
         if (!file_exists($counterFile)) {
-            return 0;
+            return 0; // Wenn die Datei nicht existiert, gibt es keine Anmeldungen
         }
         $lines = file($counterFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
+        // Anzahl der Zeilen (Anmeldungen) in der Datei zurückgeben
         return count($lines);
     }
 
+    // MySQL-Verbindung herstellen
     $link=mysqli_connect("localhost", // Host der Datenbank
         "root",                 // Benutzername zur Anmeldung
         "",    // Passwort
@@ -136,32 +139,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // optional port der Datenbank
     );
 
+    // Überprüfen, ob die Verbindung erfolgreich war
     if (!$link) {
         echo "Verbindung fehlgeschlagen: ", mysqli_connect_error();
         exit();
     }
 
+    // MySQL-Abfrage: Anzahl der Datensätze in der Tabelle "gericht" zählen
     $sql = "SELECT count(*) as count FROM gericht";
 
+    // Query ausführen
     $result = mysqli_query($link, $sql);
+
+    // Überprüfen, ob die Abfrage erfolgreich war
     if (!$result) {
         echo "Fehler während der Abfrage:  ", mysqli_error($link);
         exit();
     }
 
+    // Ergebnis abrufen und die Anzahl der Gerichte speichern
     $row = $result->fetch_assoc();
-
-
     $dishCount = $row['count'];
 
+    // Ergebnis freigeben
     mysqli_free_result($result);
 
-    // Besucher anzahl
+    // Besucheranzahl erfassen
 
+    // IP-Adresse des Besuchers und aktuelles Datum abrufen
     $ipAdresse = $_SERVER['REMOTE_ADDR'];
     $datumBesuch = date("Y-m-d");
 
-    // MySQLi INSERT INTO-Abfrage
+    // MySQL-Abfrage: Überprüfen, ob die IP bereits in der Tabelle "Besucher" vorhanden ist
     $sql = "SELECT * FROM Besucher WHERE IPAdresse = '$ipAdresse'";
     $result = mysqli_query($link, $sql);
     $existingRecord = $result->fetch_assoc();
@@ -173,27 +182,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // IP nicht vorhanden, neuen Datensatz einfügen
         mysqli_query($link, "INSERT INTO Besucher (IPAdresse, DatumBesuch) VALUES ('$ipAdresse', '$datumBesuch')");
     }
+
+    // Ergebnis freigeben
     mysqli_free_result($result);
 
-    $sql = "SELECT count(*) as count FROM besucher";
-
+    // Anzahl der Besucher für das aktuelle Datum zählen
+    $datum = date("Y-m-d");
+    $sql = "SELECT count(*) as count FROM besucher Where DatumBesuch = '$datum'";
     $result = mysqli_query($link, $sql);
+
+    // Überprüfen, ob die Abfrage erfolgreich war
     if (!$result) {
         echo "Fehler während der Abfrage:  ", mysqli_error($link);
         exit();
     }
 
+    // Ergebnis abrufen und die Anzahl der Besucher für das aktuelle Datum speichern
     $row = $result->fetch_assoc();
-
-
     $visitorCount = $row['count'];
 
+    // Ergebnis freigeben
     mysqli_free_result($result);
+
+    // MySQL-Verbindung schließen
     mysqli_close($link);
 
-    // Newsletter
+    // Newsletter-Anmeldungen abrufen
     $newsletterCount = getNewsletterSubscriptions();
     ?>
+
 
     <div>
         <h2 id="zahlen">E-Mensa in Zahlen</h2>
