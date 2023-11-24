@@ -2,7 +2,7 @@
 $link = mysqli_connect(
     "localhost",
     "root",
-    "0000",
+    "",
     "emensawerbeseite",
     3306
 );
