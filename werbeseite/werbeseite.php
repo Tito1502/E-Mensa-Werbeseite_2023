@@ -78,14 +78,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="speisen">
         <h2 id="speisen">Köstlichkeiten, die Sie erwarten</h2>
         <?php
-        //m3 5.1
+        //m3 a5.1
         include 'm3_5.1_selectmealfnc.php';
         //$sql = "select name, preisintern, preisextern from gericht order by name asc limit 5;";
-        //a5.3
+        //m3 a5.3
         $sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5;";
         selectmealfromdb($sql, true);
         ?>
-        <!-- code von Jeremy-->
+        <!--alter code von Jeremy m1/2-->
         <!--<table>
             <thead>
             <tr>
@@ -131,7 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $link=mysqli_connect("localhost", // Host der Datenbank
         "root",                 // Benutzername zur Anmeldung
-        "0000",    // Passwort
+        "",    // Passwort
         "emensawerbeseite"      // Auswahl der Datenbanken (bzw. des Schemas)
     // optional port der Datenbank
     );
