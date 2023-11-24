@@ -1,5 +1,8 @@
 USE emensawerbeseite;
 
+
+//erstelle Tabelle gericht
+
 CREATE TABLE gericht
 (
     id           INT8 PRIMARY KEY,
@@ -12,12 +15,16 @@ CREATE TABLE gericht
     preisextern  DOUBLE       NOT NULL CHECK (preisintern <= preisextern)
 );
 
+//erstelle Tabelle allergen
+
 CREATE TABLE allergen
 (
     code CHAR(4) PRIMARY KEY,
     name VARCHAR(300) NOT NULL,
     typ  VARCHAR(20)  NOT NULL DEFAULT 'allergen'
 );
+
+//erstelle Tabelle kategorie
 
 CREATE TABLE kategorie
 (
@@ -27,11 +34,15 @@ CREATE TABLE kategorie
     bildname  VARCHAR(200)
 );
 
+//erstelle Tabelle gericht_hat_allergen
+
 CREATE TABLE gericht_hat_allergen
 (
     code       CHAR(4),
     gericht_id INT8 NOT NULL
 );
+
+//erstelle Tabelle gericht_hat_kategorie
 
 CREATE TABLE gericht_hat_kategorie
 (

@@ -1,4 +1,7 @@
+//geändert zu USE emensawerbeseite
 USE emensawerbeseite;
+
+//füllt Tabelle allergen mit daten
 
 INSERT INTO `allergen` (`code`, `name`, `typ`)
 VALUES ('a', 'Getreideprodukte', 'Getreide (Gluten)'),
@@ -23,6 +26,9 @@ VALUES ('a', 'Getreideprodukte', 'Getreide (Gluten)'),
        ('h3', 'Walnüsse', 'Allergen'),
        ('i', 'Erdnüsse', 'Allergen');
 
+//füllt tabelle gericht mit Daten
+//preis_intern und preis_extern geändert zu preisintern und preisextern
+
 INSERT INTO `gericht` (`id`, `name`, `beschreibung`, `erfasst_am`, `vegan`, `vegetarisch`, `preisintern`,
                        `preisextern`)
 VALUES (1, 'Bratkartoffeln mit Speck und Zwiebeln', 'Kartoffeln mit Zwiebeln und gut Speck', '2020-08-25', 0, 0, 2.3,
@@ -45,6 +51,8 @@ VALUES (1, 'Bratkartoffeln mit Speck und Zwiebeln', 'Kartoffeln mit Zwiebeln und
        (18, 'Tomatenbrötchen', 'mit Schnittlauch und Zwiebeln', '2020-08-25', 1, 1, 1, 1.5),
        (19, 'Mousse au Chocolat', 'sahnige schweizer Schokolade rundet jedes Essen ab', '2020-08-26', 0, 1, 1.25, 1.75),
        (20, 'Suppenkreation á la Chef', 'was verschafft werden muss, gut und günstig', '2020-08-26', 0, 0, 0.5, 0.9);
+
+//fülle Tabelle gericht_hat_allergen mit Daten
 
 INSERT INTO `gericht_hat_allergen` (`code`, `gericht_id`)
 VALUES ('h', 1),
@@ -79,6 +87,8 @@ VALUES ('h', 1),
        ('f3', 15),
        ('h3', 15);
 
+//fülle Tabelle kategorie mit daten
+
 INSERT INTO `kategorie` (`id`, `eltern_id`, `name`, `bildname`)
 VALUES (1, NULL, 'Aktionen', 'kat_aktionen.png'),
        (2, NULL, 'Menus', 'kat_menu.gif'),
@@ -87,6 +97,8 @@ VALUES (1, NULL, 'Aktionen', 'kat_aktionen.png'),
        (5, 2, 'Desserts', 'kat_menu_dessert.pic'),
        (6, 1, 'Mensastars', 'kat_stars.tif'),
        (7, 1, 'Erstiewoche', 'kat_erties.jpg');
+
+//fülle Tabelle gericht_hat_kategorie mit Daten
 
 INSERT INTO `gericht_hat_kategorie` (`kategorie_id`, `gericht_id`)
 VALUES (3, 1),

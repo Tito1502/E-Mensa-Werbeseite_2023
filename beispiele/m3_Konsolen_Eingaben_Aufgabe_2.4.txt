@@ -1,3 +1,4 @@
+//zählt die Einträge aller Tabellen
 USE emensawerbeseite;
 
 SELECT COUNT(*) FROM gericht;
