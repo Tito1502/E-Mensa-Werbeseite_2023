@@ -6,7 +6,7 @@ function selectmealfromdb($sql, $show): void
     $link = mysqli_connect(
         "localhost",
         "root",
-        "blockja",
+        "",
         "emensawerbeseite",
         3306
     );
