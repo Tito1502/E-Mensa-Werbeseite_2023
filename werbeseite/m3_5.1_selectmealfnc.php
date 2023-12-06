@@ -1,20 +1,8 @@
 <?php
 //funktion um eine tabelle von gerichten anzuzeigen
 //if $show gib die allergene der gerichte ezusätzlich aus 
-function selectmealfromdb($sql, $show): void
+function selectmealfromdb($sql, $show, $link): void
 {
-    $link = mysqli_connect(
-        "localhost",
-        "root",
-        "",
-        "emensawerbeseite",
-        3306
-    );
-
-    if (!$link) {
-        echo "Verbindung fehlgeschlagen: ", mysqli_connect_error();
-        exit();
-    }
 
     $result = mysqli_query($link, $sql);//frage nach gerichten ab
 
@@ -77,5 +65,4 @@ function selectmealfromdb($sql, $show): void
         } else echo "Keine Ergebnisse gefunden";
 
     } else echo "Fehler beim Ausführen der Abfrage: " . mysqli_error($link);
-    mysqli_close($link);
 }

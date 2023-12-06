@@ -1,4 +1,39 @@
 <?php
+$link = mysqli_connect(
+    "localhost",
+    "root",
+    "",
+    "emensawerbeseite",
+    3306
+);
+
+if (!$link) {
+    echo "Verbindung fehlgeschlagen: ", mysqli_connect_error();
+    exit();
+}
+
+// Besucheranzahl erfassen
+
+// IP-Adresse des Besuchers und aktuelles Datum abrufen
+$ipAdresse = $_SERVER['REMOTE_ADDR'];
+$datumBesuch = date("Y-m-d");
+
+// MySQL-Abfrage: Überprüfen, ob die IP bereits in der Tabelle "Besucher" vorhanden ist
+$sql = "SELECT * FROM Besucher WHERE IPAdresse = '$ipAdresse'";
+$result = mysqli_query($link, $sql);
+$existingRecord = $result->fetch_assoc();
+
+if ($existingRecord) {
+    // IP vorhanden, Datum aktualisieren
+    mysqli_query($link, "UPDATE Besucher SET DatumBesuch = '$datumBesuch' WHERE IPAdresse = '$ipAdresse'");
+} else {
+    // IP nicht vorhanden, neuen Datensatz einfügen
+    mysqli_query($link, "INSERT INTO Besucher (IPAdresse, DatumBesuch) VALUES ('$ipAdresse', '$datumBesuch')");
+}
+
+// Ergebnis freigeben
+mysqli_free_result($result);
+
 // Überprüfen, ob ein POST-Request gesendet wurde
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Funktion zur Überprüfung der E-Mail-Domain
@@ -19,10 +54,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (empty($name) || !filter_var($email, FILTER_VALIDATE_EMAIL) || isnotAllowedDomain($email) || !$datenschutz) {
         echo '<script>alert("Ihre E-Mail entspricht nicht den Vorgaben oder es wurden nicht alle erforderlichen Felder ausgefüllt.");</script>';
     } else {
-        // Daten in einer Datei speichern
-        $data = "$name, $email, $sprache\n";
-        file_put_contents('newsletter_data.txt', $data, FILE_APPEND);
+        $result = mysqli_query($link, "SELECT * FROM newsletter_anmeldung WHERE email = '$email'");
 
+        if (!$result) {
+            echo "Fehler während der Abfrage:  ", mysqli_error($link);
+            exit();
+        }
+
+        if (mysqli_num_rows($result) == 0)
+            $result = mysqli_query($link, "INSERT INTO newsletter_anmeldung (email, name, language) VALUES ('$email','$name','$sprache')");
+        else
+            $result = mysqli_query($link, "UPDATE newsletter_anmeldung SET name='$name', language='$sprache'  WHERE email ='$email'");
+
+        mysqli_free_result($result);
         // Erfolgsmeldung an den Benutzer ausgeben
         echo '<script>alert("Vielen Dank! Sie wurden erfolgreich für den Newsletter angemeldet.");</script>';
         echo '<script>window.location.replace("werbeseite.php");</script>';
@@ -82,68 +126,32 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         include 'm3_5.1_selectmealfnc.php';
         //$sql = "select name, preisintern, preisextern from gericht order by name asc limit 5;";
         //m3 a5.3
-        $sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5;";
-        selectmealfromdb($sql, true);
+        $sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5";
+        selectmealfromdb($sql, true, $link);
         ?>
-        <!--alter code von Jeremy m1/2-->
-        <!--<table>
-            <thead>
-            <tr>
-                <th></th>
-                <th>Preis intern</th>
-                <th>Preis extern</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php
-            // Include the array.php file
-        /*
-     $meals = [];
-     include 'array_gerichte.php';
-     // Iterate through the $meals array and populate the table
-     foreach ($meals as $key => $meal) {
-         echo "<tr>";
-         echo "<td>" . $meal['name'] . "</td>";
-         echo "<td>" . $meal['preis_intern'] . "</td>";
-         echo "<td>" . $meal['preis_extern'] . "</td>";
-         echo "<td><img src='" . $meal['bild'] . "' alt='Bild'></td>";
-         echo "</tr>";
-     }*/
-            ?>
-            </tbody>
-        </table>-->
     </div>
 
 
     <?php
     // Funktion zum Abrufen der Anzahl der gespeicherten Newsletter-Anmeldungen
-    function getNewsletterSubscriptions(): int
-    {
-        $counterFile = 'newsletter_data.txt';
+    $sql = "SELECT count(*) as count FROM newsletter_anmeldung";
 
-        // Überprüfen, ob die Datei existiert
-        if (!file_exists($counterFile)) {
-            return 0; // Wenn die Datei nicht existiert, gibt es keine Anmeldungen
-        }
-        $lines = file($counterFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    // Query ausführen
+    $result = mysqli_query($link, $sql);
 
-        // Anzahl der Zeilen (Anmeldungen) in der Datei zurückgeben
-        return count($lines);
-    }
-
-    // MySQL-Verbindung herstellen
-    $link=mysqli_connect("localhost", // Host der Datenbank
-        "root",                 // Benutzername zur Anmeldung
-        "",    // Passwort
-        "emensawerbeseite"      // Auswahl der Datenbanken (bzw. des Schemas)
-    // optional port der Datenbank
-    );
-
-    // Überprüfen, ob die Verbindung erfolgreich war
-    if (!$link) {
-        echo "Verbindung fehlgeschlagen: ", mysqli_connect_error();
+    // Überprüfen, ob die Abfrage erfolgreich war
+    if (!$result) {
+        echo "Fehler während der Abfrage:  ", mysqli_error($link);
         exit();
     }
+
+    // Ergebnis abrufen und die Anzahl der Gerichte speichern
+    $row = $result->fetch_assoc();
+    $newsletterCount = $row['count'];
+
+    // Ergebnis freigeben
+    mysqli_free_result($result);
+
 
     // MySQL-Abfrage: Anzahl der Datensätze in der Tabelle "gericht" zählen
     $sql = "SELECT count(*) as count FROM gericht";
@@ -164,27 +172,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Ergebnis freigeben
     mysqli_free_result($result);
 
-    // Besucheranzahl erfassen
 
-    // IP-Adresse des Besuchers und aktuelles Datum abrufen
-    $ipAdresse = $_SERVER['REMOTE_ADDR'];
-    $datumBesuch = date("Y-m-d");
-
-    // MySQL-Abfrage: Überprüfen, ob die IP bereits in der Tabelle "Besucher" vorhanden ist
-    $sql = "SELECT * FROM Besucher WHERE IPAdresse = '$ipAdresse'";
-    $result = mysqli_query($link, $sql);
-    $existingRecord = $result->fetch_assoc();
-
-    if ($existingRecord) {
-        // IP vorhanden, Datum aktualisieren
-        mysqli_query($link, "UPDATE Besucher SET DatumBesuch = '$datumBesuch' WHERE IPAdresse = '$ipAdresse'");
-    } else {
-        // IP nicht vorhanden, neuen Datensatz einfügen
-        mysqli_query($link, "INSERT INTO Besucher (IPAdresse, DatumBesuch) VALUES ('$ipAdresse', '$datumBesuch')");
-    }
-
-    // Ergebnis freigeben
-    mysqli_free_result($result);
 
     // Anzahl der Besucher für das aktuelle Datum zählen
     $datum = date("Y-m-d");
@@ -207,8 +195,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // MySQL-Verbindung schließen
     mysqli_close($link);
 
-    // Newsletter-Anmeldungen abrufen
-    $newsletterCount = getNewsletterSubscriptions();
     ?>
 
 
@@ -239,8 +225,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <div class="sprache">
                     <label for="sprache">Newsletter bitte in: </label><br>
                     <select name="sprache" id="sprache">
-                        <option value="Deutsch" selected>Deutsch</option>
-                        <option value="Englisch">Englisch</option>
+                        <option value="de" selected>Deutsch</option>
+                        <option value="en">Englisch</option>
                     </select><br><br>
                 </div>
 
@@ -274,7 +260,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <hr>
 
 <footer id="impressum" style="text-align:center;">
-    (c)E-Mensa Gmbh | Jeremy Mainka, Philip Engels | <a href="#impressum">Impressum</a>
+    (c)E-Mensa Gmbh | Jeremy Mainka, Philip Engels, Bol Daudov | <a href="#impressum">Impressum</a>
 </footer>
 
 </body>
