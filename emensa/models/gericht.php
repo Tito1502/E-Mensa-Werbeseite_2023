@@ -37,3 +37,12 @@ function db_gericht_sort_price_desc() {
     mysqli_close($link);
     return $data;
 }
+
+function dbget5meals($israndom){
+    $link = connectdb();
+
+    if($israndom)$sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5";
+    else $sql = "select name, preisintern, preisextern from gericht order by name asc limit 5;";
+    $result = mysqli_query($link, $sql);
+
+}
