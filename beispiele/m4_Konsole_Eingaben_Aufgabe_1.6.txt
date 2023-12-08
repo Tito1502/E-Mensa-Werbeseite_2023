@@ -1,0 +1,12 @@
+a)
+SELECT * FROM wunschgericht
+ORDER BY erstellungsdatum DESC
+LIMIT 5;
+
+b)
+//joint die Tabellen auf email und zählt die Ergebnisse pro User
+SELECT e.name AS ersteller_name, COUNT(w.id) AS anzahl_wunschgerichte
+FROM ersteller e
+LEFT JOIN wunschgericht w ON e.email = w.email
+GROUP BY e.email
+ORDER BY anzahl_wunschgerichte DESC;

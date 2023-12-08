@@ -1,0 +1,104 @@
+1) Kombination von Gericht und Kategorie eindeutig:
+
+ALTER TABLE gericht_hat_kategorie
+ADD CONSTRAINT unique_gerichtID_kategorieID
+UNIQUE (gericht_id, kategorie_id);
+
+2) Tabelle gericht Abfrage nach Name beschleunigen:
+
+CREATE INDEX gericht_name ON gericht (NAME);
+
+3) Referenzen in gericht_hat_kategorie und gericht_hat_allergen löschen wenn Gericht gelöscht wird:
+
+//löscht foreign keys in gericht_hat_kategorie
+ALTER TABLE gericht_hat_kategorie
+DROP FOREIGN KEY IF EXISTS FK_gid2;
+
+ALTER TABLE gericht_hat_kategorie
+DROP FOREIGN KEY IF EXISTS FK_kid;
+
+//erstellt die foreign keys neu mit ON DELETE Anweisung
+ALTER TABLE gericht_hat_kategorie
+ADD CONSTRAINT FK_gid2
+FOREIGN KEY (gericht_id)
+REFERENCES gericht(id)
+ON DELETE CASCADE;
+
+ALTER TABLE gericht_hat_kategorie
+ADD CONSTRAINT FK_kid
+FOREIGN KEY (kategorie_id)
+REFERENCES kategorie(id)
+ON DELETE CASCADE;
+
+//löscht foreign keys in gericht_hat_allergen
+ALTER TABLE gericht_hat_allergen
+DROP FOREIGN KEY IF EXISTS FK_gid1;
+
+ALTER TABLE gericht_hat_allergen
+DROP FOREIGN KEY IF EXISTS FK_code;
+
+//erstellt die foreign keys neu mit ON DELETE Anweisung
+ALTER TABLE gericht_hat_allergen
+ADD CONSTRAINT FK_gid1
+FOREIGN KEY (gericht_id)
+REFERENCES gericht(id)
+ON DELETE CASCADE;
+
+ALTER TABLE gericht_hat_allergen
+ADD CONSTRAINT FK_code
+FOREIGN KEY (code)
+REFERENCES allergen(code)
+ON DELETE CASCADE;
+
+4) Kategorie nur löschen wenn keine gericht / keine eltern kategorie
+
+//Setzt das Ende vom Befehl auf /-/ statt ;
+DELIMITER /-/
+
+//erstellt Trigger
+CREATE TRIGGER TR_vor_Löschung_Kategorie
+BEFORE DELETE ON kategorie FOR EACH ROW
+
+//Beginn der Anweisungen
+BEGIN
+
+//deklariert Zähl Variablen
+  DECLARE anzahl_gerichte INT;
+  DECLARE anzahl_eltern_kategorien INT;
+
+//zählt Gericht aus der zu löschenden Kategorie
+  SELECT COUNT(*) INTO anzahl_gerichte
+  FROM gericht_hat_kategorie
+  WHERE kategorie_id = OLD.id;
+
+//zählt Kind Kategorien aus kategorie die gültig und nicht 0 sind
+  SELECT COUNT(*) INTO anzahl_eltern_kategorien
+  FROM kategorie
+  WHERE eltern_id IS NOT NULL AND eltern_id IN (SELECT id FROM kategorie) AND id = OLD.id;
+
+//gibt ERROR aus wenn Gerichte zur Kategorie gehören oder es eine Kind Kategorie gibt
+  IF anzahl_gerichte > 0 OR anzahl_eltern_kategorien > 0 THEN
+    SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'Kategorie kann nicht gelöscht werden. Kategorie enthählt Gerichte oder Kindkategorien.';
+  END IF;
+  
+//Ende vom Trigger
+END /-/
+//Befehls Ende wieder auf ;
+DELIMITER ;
+
+5) allergen Code ändern -> update referenzen
+
+ALTER TABLE gericht_hat_allergen
+DROP FOREIGN KEY IF EXISTS FK_code;
+
+ALTER TABLE gericht_hat_allergen
+ADD CONSTRAINT FK_code
+FOREIGN KEY (code)
+REFERENCES allergen(code)
+ON UPDATE CASCADE ON DELETE CASCADE;
+
+6) gericht_id und kategorie_id als Primärschlüssel
+
+ALTER TABLE gericht_hat_kategorie
+ADD PRIMARY KEY (gericht_id, kategorie_id);
