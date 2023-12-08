@@ -2,7 +2,7 @@
 $link = mysqli_connect(
     "localhost",
     "root",
-    "",
+    "root",
     "emensawerbeseite",
     3306
 );
@@ -250,6 +250,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <li>Sauberkeit</li>
         </ul>
     </div>
+
+    <h2>Haben sie noch Wunschgerichte?</h2>
+
+    <a href="wunschgericht.php">Hier können sie etwas vorschlagen.</a>
 
     <h2 id="abschied">Wir freuen uns auf Ihren Besuch!</h2>
 
