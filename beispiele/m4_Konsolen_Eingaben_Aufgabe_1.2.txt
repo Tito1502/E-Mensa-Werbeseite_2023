@@ -1,0 +1,15 @@
+CREATE TABLE ersteller
+(
+    name VARCHAR(255) DEFAULT 'anonym',
+    email VARCHAR(255) PRIMARY KEY
+);
+
+CREATE TABLE wunschgericht
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    beschreibung TEXT,
+    erstellungsdatum DATE DEFAULT CURRENT_DATE,
+    email VARCHAR(255),
+    CONSTRAINT FK_email FOREIGN KEY (email) REFERENCES ersteller(email)
+);

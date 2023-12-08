@@ -1,0 +1,23 @@
+INSERT INTO `kategorie` (`id`, `eltern_id`, `name`, `bildname`)
+VALUES (11,NULL,'test1','test1_img');
+
+INSERT INTO `kategorie` (`id`, `eltern_id`, `name`, `bildname`)
+VALUES (10,11,'test','test_img');
+
+INSERT INTO `gericht` (`id`, `name`, `beschreibung`, `erfasst_am`, `vegan`, `vegetarisch`, `preisintern`,`preisextern`)
+VALUES (25,'dummy','löschen','2023-02-01',0,0,0.1,0.2);
+
+INSERT INTO `gericht_hat_kategorie` (`kategorie_id`, `gericht_id`)
+VALUES (11,25);
+
+DELETE FROM kategorie 
+WHERE id = 11;
+
+DELETE FROM kategorie 
+WHERE id = 10;
+
+DELETE FROM gericht
+WHERE id = 25;
+
+DELETE FROM kategorie 
+WHERE id = 10;

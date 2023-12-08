@@ -7,7 +7,10 @@
  */
 
 return array(
-    '/'             => "HomeController@index",
+
+    '/' => "WerbeseiteController@index",
+
+    /*'/'             => "HomeController@index",
     "/demo"         => "DemoController@demo",
     '/dbconnect'    => 'DemoController@dbconnect',
     '/debug'        => 'HomeController@debug',
@@ -19,7 +22,5 @@ return array(
     '/m4' => 'ExampleController@m4_7a_queryparameter',
     '/m4_7b_kategorie' => 'ExampleController@m4_7b_kategorie',
     '/m4_7c_gerichte' => 'ExampleController@m4_7c_gerichte',
-    '/m4_7d_layout' => 'ExampleController@m4_7d_layout',
-
-    '/homepage' => 'HomepageController@index',
+    '/m4_7d_layout' => 'ExampleController@m4_7d_layout',*/
 );
