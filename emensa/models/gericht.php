@@ -25,3 +25,15 @@ function db_gericht_select_all() {
     }
 
 }
+
+function db_gericht_sort_price_desc() {
+    $link = connectdb();
+
+    $sql = "SELECT name, preisintern FROM gericht WHERE preisintern > 2 ORDER BY name DESC;";
+    $result = mysqli_query($link, $sql);
+
+    $data = mysqli_fetch_all($result, MYSQLI_BOTH);
+
+    mysqli_close($link);
+    return $data;
+}

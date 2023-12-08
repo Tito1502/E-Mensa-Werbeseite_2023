@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'emensa/mvc',
-        'pretty_version' => 'dev-ac3eb12ab743c0c1f7fa1538586ff366402d472a',
-        'version' => 'dev-ac3eb12ab743c0c1f7fa1538586ff366402d472a',
-        'reference' => 'ac3eb12ab743c0c1f7fa1538586ff366402d472a',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '80430a0a803ed2db3a7b51eb7bad1935f8acd4b4',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'emensa/mvc' => array(
-            'pretty_version' => 'dev-ac3eb12ab743c0c1f7fa1538586ff366402d472a',
-            'version' => 'dev-ac3eb12ab743c0c1f7fa1538586ff366402d472a',
-            'reference' => 'ac3eb12ab743c0c1f7fa1538586ff366402d472a',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '80430a0a803ed2db3a7b51eb7bad1935f8acd4b4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
