@@ -2,7 +2,7 @@
 $link = mysqli_connect(
     "localhost",
     "root",
-    "root",
+    "0000",
     "emensawerbeseite",
     3306
 );
@@ -66,7 +66,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         else
             $result = mysqli_query($link, "UPDATE newsletter_anmeldung SET name='$name', language='$sprache'  WHERE email ='$email'");
 
-        mysqli_free_result($result);
         // Erfolgsmeldung an den Benutzer ausgeben
         echo '<script>alert("Vielen Dank! Sie wurden erfolgreich für den Newsletter angemeldet.");</script>';
         echo '<script>window.location.replace("werbeseite.php");</script>';

@@ -9,6 +9,7 @@
 return array(
 
     '/' => "WerbeseiteController@index",
+    '/wunschgericht' => "WerbeseiteController@wunschgericht",
 
     /*'/'             => "HomeController@index",
     "/demo"         => "DemoController@demo",
