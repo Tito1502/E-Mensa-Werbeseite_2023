@@ -84,31 +84,59 @@ class WerbeseiteController
     public function wunschgericht(RequestData $rq)
     {
         $link  =connectdb();
-        if ($_POST != []) {
+        if (!$link)
+        {
+            echo "Verbindung fehlgeschlagen: ", mysqli_error($link);
+            exit();
+        }
 
-            $gericht_name = $_POST["gericht_name"];
-            $beschreibung = $_POST["beschreibung"];
-            $gemeldet_von = $_POST["gemeldet_von"];
-            $email = $_POST["email"];
+        //wenn Formular abgeschickt wurde
+        if ($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            //überprüfen ob erwarteten Felder gefüllt sind
+            if (isset($_POST["gericht_name"], $_POST["beschreibung"], $_POST["email"]))
+            {
+                $gericht_name = $_POST["gericht_name"];
+                $beschreibung = $_POST["beschreibung"];
+                $ersteller_name = empty($_POST["ersteller_name"]) ? "anonym" : $_POST["ersteller_name"];
+                $email = $_POST["email"];
 
-            // Prepared Statement für das Einfügen des Erstellers
-            $stmt_ersteller = mysqli_stmt_init($link);
-            mysqli_stmt_prepare($stmt_ersteller, "INSERT INTO ersteller (Name, Email) VALUES(?,?)");
-            mysqli_stmt_bind_param($stmt_ersteller, "ss", $gemeldet_von, $email);
+                $gericht_name_neu = htmlspecialchars($gericht_name);
+                $beschreibung_neu = htmlspecialchars($beschreibung);
+                $ersteller_name_neu = htmlspecialchars($ersteller_name);
+                $email_neu = htmlspecialchars($email);
 
+                //vorbereitete Anweisungen um SQL-Injektionen zu verhindern
+                $sql_ersteller = "INSERT INTO ersteller (name, email) VALUES (?, ?)";
+                $sql_wunschgericht = "INSERT INTO wunschgericht (name, beschreibung, email) VALUES (?, ?, ?)";
 
-            if (mysqli_stmt_execute($stmt_ersteller)) {
-                $e_id = mysqli_insert_id($link);
-                $stmt_wgericht = mysqli_stmt_init($link);
-                mysqli_stmt_prepare($stmt_wgericht, "INSERT INTO wunschgericht (Name, Beschreibung, Erstellungsdatum, Ersteller_ID) VALUES(?,?,NOW(),?) ");
-                mysqli_stmt_bind_param($stmt_wgericht, "sss", $gericht_name, $beschreibung, $e_id);
-                mysqli_stmt_execute($stmt_wgericht);
+                //Beginn der Transaktion
+                $link->begin_transaction();
 
-                header("Location: /");
-                exit();
+                try
+                {
+                    //Eintrag in ersteller
+                    $stmt_ersteller = $link->prepare($sql_ersteller);
+                    $stmt_ersteller->bind_param("ss", $ersteller_name_neu, $email_neu);
+                    $stmt_ersteller->execute();
 
+                    //Eintrag in wunschgericht
+                    $stmt_wunschgericht = $link->prepare($sql_wunschgericht);
+                    $stmt_wunschgericht->bind_param("sss", $gericht_name_neu, $beschreibung_neu, $email_neu);
+                    $stmt_wunschgericht->execute();
+
+                    //Transaktion abschließen / Datenbankänderungen übernehmen
+                    $link->commit();
+                    echo "Wunsch erfolgreich eingetragen!";
+                    header("Location: /");
+                    exit();
+                } catch (Exception $e) {
+                    //bei Fehler die Transaktion rückgängig machen
+                    $link->rollback();
+                    echo "Fehler beim Eintragen des Wunsches: " . $e->getMessage();
+                }
             } else {
-                echo "Fehler beim Einfügen der Daten: " . mysqli_error($link);
+                echo "Ungültige Formulardaten.";
             }
         }
         return view("homepage.wunschgericht");
