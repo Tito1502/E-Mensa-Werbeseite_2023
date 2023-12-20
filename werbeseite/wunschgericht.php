@@ -46,6 +46,11 @@ if ($_POST != [])
             $ersteller_name = empty($_POST["ersteller_name"]) ? "anonym" : $_POST["ersteller_name"];
             $email = $_POST["email"];
 
+            $gericht_name_neu = htmlspecialchars($gericht_name);
+            $beschreibung_neu = htmlspecialchars($beschreibung);
+            $ersteller_name_neu = htmlspecialchars($ersteller_name);
+            $email_neu = htmlspecialchars($email);
+
             //vorbereitete Anweisungen um SQL-Injektionen zu verhindern
             $sql_ersteller = "INSERT INTO ersteller (name, email) VALUES (?, ?)";
             $sql_wunschgericht = "INSERT INTO wunschgericht (name, beschreibung, email) VALUES (?, ?, ?)";
@@ -57,12 +62,12 @@ if ($_POST != [])
             {
                 //Eintrag in ersteller
                 $stmt_ersteller = $link->prepare($sql_ersteller);
-                $stmt_ersteller->bind_param("ss", $ersteller_name, $email);
+                $stmt_ersteller->bind_param("ss", $ersteller_name_neu, $email_neu);
                 $stmt_ersteller->execute();
 
                 //Eintrag in wunschgericht
                 $stmt_wunschgericht = $link->prepare($sql_wunschgericht);
-                $stmt_wunschgericht->bind_param("sss", $gericht_name, $beschreibung, $email);
+                $stmt_wunschgericht->bind_param("sss", $gericht_name_neu, $beschreibung_neu, $email_neu);
                 $stmt_wunschgericht->execute();
 
                 //Transaktion abschließen / Datenbankänderungen übernehmen
