@@ -36,8 +36,8 @@
             <h2 id="speisen">Köstlichkeiten, die Sie erwarten</h2>
            <table >
                 {{--if $show brauchen wir zusätzliche spalte für allergene--}}
-               @if($show) <tr><th>Name</th><th>Preis intern</th><th>Preis extern</th><th>Allergencode</th></tr>
-               @else <tr><th>Name</th><th>Preis intern</th><th>Preis extern</th></tr>
+               @if($show) <tr><th>Name</th><th>Preis intern</th><th>Preis extern</th><th>Allergencode</th><th>Bild</th></tr>
+               @else <tr><th>Name</th><th>Preis intern</th><th>Preis extern</th><th>Bild</th></tr>
                @endif
                @foreach($meals as $meal)
                    <tr>
@@ -45,6 +45,10 @@
                        <td>{{ $meal['preisintern'] }}</td>
                        <td>{{ $meal['preisextern'] }}</td>
                        @if($show)<td>{{ $meal['Code'] }}</td>@endif
+                       @if($meal['bildname'] == NULL) <td><img src="/img/gerichte/00_image_missing.jpg" alt="KeinBild"></td>
+                       @else
+                           <td><img src="/img/gerichte/{{$meal['bildname']}}" alt="Bild" width="100" height="100"></td>
+                       @endif
                    </tr>
                @endforeach
            </table>
