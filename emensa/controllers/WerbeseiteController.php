@@ -22,6 +22,8 @@ class WerbeseiteController
 {
     public function index(RequestData $rq)
     {
+        $log = logger();
+        $log->info('Hauptseite aufgerufen');
         session_start();
         if (!isset($_SESSION['login_ok'])){$_SESSION['login_ok'] = false;}
         $_SESSION['target'] = "";
@@ -123,10 +125,15 @@ class WerbeseiteController
                 $_SESSION['admin'] = isadmin($_POST['email']);
 
                 update_user($_POST['email'], true);
+
+                $log = logger();
+                $log->info('Angemeldet ' . $_POST['email']);
                 header('Location: /');
             }
             else
             {
+                $log = logger();
+                $log->warning('Passwort falsch ' . $_POST['email']);
                 update_user($_POST['email'], false);
                 $_SESSION['login_result_message'] = "Passwort falsch";
                 header('Location: /anmeldung');
@@ -134,6 +141,8 @@ class WerbeseiteController
         }
         else
         {
+            $log = logger();
+            $log->warning('Email existiert nicht ' . $_POST['email']);
             $_SESSION['login_result_message'] = "Email existiert nicht";
             header('Location: /anmeldung');
         }
@@ -143,6 +152,8 @@ class WerbeseiteController
     {
         session_start();
         session_destroy();
+        $log = logger();
+        $log->info('Abgemeldet');
         header('Location: /');
     }
 
