@@ -1,0 +1,56 @@
+ALTER TABLE gericht
+ADD COLUMN bildname VARCHAR(200) DEFAULT NULL;
+
+
+
+UPDATE gericht
+SET bildname = '01_bratkartoffel.JPG'
+WHERE id = 1;
+
+UPDATE gericht
+SET bildname = '03_bratkartoffel.JPG'
+WHERE id = 3;
+
+UPDATE gericht
+SET bildname = '04_tofu.JPG'
+WHERE id = 4;
+
+UPDATE gericht
+SET bildname = '06_lasagne.JPG'
+WHERE id = 6;
+
+UPDATE gericht
+SET bildname = '09_suppe.JPG'
+WHERE id = 9;
+
+UPDATE gericht
+SET bildname = '10_forelle.JPG'
+WHERE id = 10;
+
+UPDATE gericht
+SET bildname = '11_soup.JPG'
+WHERE id = 11;
+
+UPDATE gericht
+SET bildname = '12_kassler.JPG'
+WHERE id = 12;
+
+UPDATE gericht
+SET bildname = '13_reibekuchen.JPG'
+WHERE id = 13;
+
+UPDATE gericht
+SET bildname = '15_pilze.JPG'
+WHERE id = 15;
+
+UPDATE gericht
+SET bildname = '17_broetchen.JPG'
+WHERE id = 17;
+
+UPDATE gericht
+SET bildname = '19_mousse.JPG'
+WHERE id = 19;
+
+UPDATE gericht
+SET bildname = '20_suppe.JPG'
+WHERE id = 20;

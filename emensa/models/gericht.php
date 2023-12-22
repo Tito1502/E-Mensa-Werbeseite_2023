@@ -44,7 +44,7 @@ function dbget5meals()
     if (!$link) {
         die('Verbindung zur Datenbank fehlgeschlagen: ' . mysqli_connect_error());
     }
-    $sql = "select name, preisintern, preisextern from gericht order by name asc limit 5;";
+    $sql = "select name, preisintern, preisextern, bildname from gericht order by name asc limit 5;";
     $data = mysqli_query($link, $sql);
     if (!$data) {
         die('Fehler bei der Abfrage: ' . mysqli_error($link));
@@ -63,7 +63,7 @@ function dbget5mealswal()
     if (!$link) {
         die('Verbindung zur Datenbank fehlgeschlagen: ' . mysqli_connect_error());
     }
-    $sql = "SELECT g.name ,g.preisintern, g.preisextern, GROUP_CONCAT(a.name SEPARATOR ', ') AS Allergene, GROUP_CONCAT(a.code SEPARATOR ', ') AS Code
+    $sql = "SELECT g.name ,g.preisintern, g.preisextern, g.bildname, GROUP_CONCAT(a.name SEPARATOR ', ') AS Allergene, GROUP_CONCAT(a.code SEPARATOR ', ') AS Code
         FROM gericht g
         LEFT JOIN gericht_hat_allergen ga ON g.id = ga.gericht_id
         LEFT JOIN allergen a ON ga.code = a.code
@@ -87,7 +87,7 @@ function dbget5mealsrand()
     if (!$link) {
         die('Verbindung zur Datenbank fehlgeschlagen: ' . mysqli_connect_error());
     }
-    $sql = "select name, preisintern, preisextern from gericht order by rand() asc limit 5;";
+    $sql = "select name, preisintern, preisextern, bildname from gericht order by rand() asc limit 5;";
     $data = mysqli_query($link, $sql);
     if (!$data) {
         die('Fehler bei der Abfrage: ' . mysqli_error($link));
@@ -106,7 +106,7 @@ function dbget5mealsrandwal()
     if (!$link) {
     die('Verbindung zur Datenbank fehlgeschlagen: ' . mysqli_connect_error());
 }
-    $sql = "SELECT g.name ,g.preisintern, g.preisextern, GROUP_CONCAT(a.name SEPARATOR ', ') AS Allergene, GROUP_CONCAT(a.code SEPARATOR ', ') AS Code
+    $sql = "SELECT g.name ,g.preisintern, g.preisextern, g.bildname, GROUP_CONCAT(a.name SEPARATOR ', ') AS Allergene, GROUP_CONCAT(a.code SEPARATOR ', ') AS Code
         FROM gericht g
         LEFT JOIN gericht_hat_allergen ga ON g.id = ga.gericht_id
         LEFT JOIN allergen a ON ga.code = a.code
