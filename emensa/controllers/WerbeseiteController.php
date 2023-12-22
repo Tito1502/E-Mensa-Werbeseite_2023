@@ -98,6 +98,53 @@ class WerbeseiteController
                 'visitorcount'=>$viscoutn]
         );
     }
+    public function anmeldung()
+    {
+        session_start();
+        $vars = ['msg' => $_SESSION['login_result_message']];
+        return view('homepage.anmeldung', $vars);
+    }
+
+    public function anmeldung_verifizieren()
+    {
+        session_start();
+        //var_dump($_POST);
+        //check inputs
+        $dbpass = getuserpasshash($_POST['email']);
+        //var_dump(getuserpasshash($_POST['email']));
+
+        if(checkemail($_POST['email']))
+        {
+            if(password_verify($_POST['pass'].'DbWt', $dbpass))
+            {
+                $_SESSION['login_ok'] = true;
+                $_SESSION['user'] = $_POST['email'];
+                $_SESSION['userID'] = getuserid($_POST['email']);
+                $_SESSION['admin'] = isadmin($_POST['email']);
+
+                update_user($_POST['email'], true);
+                header('Location: /');
+            }
+            else
+            {
+                update_user($_POST['email'], false);
+                $_SESSION['login_result_message'] = "Passwort falsch";
+                header('Location: /anmeldung');
+            }
+        }
+        else
+        {
+            $_SESSION['login_result_message'] = "Email existiert nicht";
+            header('Location: /anmeldung');
+        }
+    }
+
+    public function abmeldung()
+    {
+        session_start();
+        session_destroy();
+        header('Location: /');
+    }
 
     public function wunschgericht(RequestData $rq)
     {
