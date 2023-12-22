@@ -1,9 +1,21 @@
 <?php
-
 require_once ("../models/gericht.php");
 require_once ("../models/allergen.php");
 require_once ("../models/besucher.php");
 require_once ("../models/newsletter_anmeldung.php");
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+
+function logger(): Logger
+{
+    // Create a log channel
+    $log = new Logger('name');
+    $log->pushHandler(new StreamHandler(dirname(__DIR__). '/storage/logs/app.log', Level::Info));
+
+    return $log;
+}
 class WerbeseiteController
 {
     public function index(RequestData $rq)
@@ -69,6 +81,8 @@ class WerbeseiteController
                 exit;
             }
         }
+        $log = logger();
+        $log->info('Hauptseite aufgerufen');
 
         return view
         ('homepage.homepage',
