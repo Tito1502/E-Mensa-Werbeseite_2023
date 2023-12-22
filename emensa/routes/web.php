@@ -9,6 +9,9 @@
 return array(
 
     '/' => "WerbeseiteController@index",
+    '/anmeldung' => "WerbeseiteController@anmeldung",
+    '/anmeldung_verifizieren' => "WerbeseiteController@anmeldung_verifizieren",
+    '/abmeldung' => "WerbeseiteController@abmeldung",
     '/wunschgericht' => "WerbeseiteController@wunschgericht",
 
     /*'/'             => "HomeController@index",

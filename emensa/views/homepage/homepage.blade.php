@@ -9,7 +9,13 @@
             <div class="grid-item"><a href="#zahlen">Zahlen</a></div>
             <div class="grid-item"><a href="#newsletter">Newsletter</a></div>
             <div class="grid-item"><a href="#wichtig">Wichtig für uns</a></div>
+
         </div>
+        @if($_SESSION['login_ok'] == false)
+            <div class="grid-item"><a href="/anmeldung">Anmelden</a></div>
+        @else
+            <div class="grid-item"><a href="/abmeldung">Abmelden</a> </div>
+        @endif
      </nav>
 @endsection
 

@@ -4,10 +4,15 @@ require_once ("../models/gericht.php");
 require_once ("../models/allergen.php");
 require_once ("../models/besucher.php");
 require_once ("../models/newsletter_anmeldung.php");
+require_once ("../models/benutzer.php");
 class WerbeseiteController
 {
     public function index(RequestData $rq)
     {
+        session_start();
+        if (!isset($_SESSION['login_ok'])){$_SESSION['login_ok'] = false;}
+        $_SESSION['target'] = "";
+        $_SESSION['login_result_message'] = null;
         //default:
         $data = dbget5meals();
         $show = false;
@@ -81,6 +86,53 @@ class WerbeseiteController
         );
     }
 
+    public function anmeldung()
+    {
+        session_start();
+        $vars = ['msg' => $_SESSION['login_result_message']];
+        return view('homepage.anmeldung', $vars);
+    }
+
+    public function anmeldung_verifizieren()
+    {
+        session_start();
+        //var_dump($_POST);
+        //check inputs
+        $dbpass = getuserpasshash($_POST['email']);
+        //var_dump(getuserpasshash($_POST['email']));
+
+        if(checkemail($_POST['email']))
+        {
+            if(password_verify($_POST['pass'].'DbWt', $dbpass))
+            {
+                $_SESSION['login_ok'] = true;
+                $_SESSION['user'] = $_POST['email'];
+                $_SESSION['userID'] = getuserid($_POST['email']);
+                $_SESSION['admin'] = isadmin($_POST['email']);
+
+                update_user($_POST['email'], true);
+                header('Location: /');
+            }
+            else
+            {
+                update_user($_POST['email'], false);
+                $_SESSION['login_result_message'] = "Passwort falsch";
+                header('Location: /anmeldung');
+            }
+        }
+        else
+        {
+            $_SESSION['login_result_message'] = "Email existiert nicht";
+            header('Location: /anmeldung');
+        }
+    }
+
+    public function abmeldung()
+    {
+        session_start();
+        session_destroy();
+        header('Location: /');
+    }
     public function wunschgericht(RequestData $rq)
     {
         $link  =connectdb();
