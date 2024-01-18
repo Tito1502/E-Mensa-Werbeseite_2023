@@ -13,6 +13,9 @@ return array(
     '/anmeldung_verifizieren' => "WerbeseiteController@anmeldung_verifizieren",
     '/abmeldung' => "WerbeseiteController@abmeldung",
     '/wunschgericht' => "WerbeseiteController@wunschgericht",
+    '/bewertungen' => "WerbeseiteController@bewertungen",
+    '/bewertung' => "WerbeseiteController@bewertung",
+    '/meinebewertungen' => "WerbeseiteController@meinebewertungen",
 
     //'/'             => "HomeController@index",
     "/demo"         => "DemoController@demo",

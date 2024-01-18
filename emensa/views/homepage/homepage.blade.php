@@ -14,7 +14,7 @@
         @if($_SESSION['login_ok'] == false)
             <div class="grid-item"><a href="/anmeldung">Anmelden</a></div>
         @else
-            <div class="grid-item"><a href="/abmeldung">Abmelden</a> </div>
+            <div class="grid-item"><a href="/abmeldung">Abmelden</a> <a href="/bewertungen">Bewertungen</a><a href="/meinebewertungen">Meine Bewertungen</a> </div>
         @endif
      </nav>
 @endsection
@@ -55,7 +55,11 @@
                        @else
                            <td><img src="/img/gerichte/{{$meal['bildname']}}" alt="Bild" width="100" height="100"></td>
                        @endif
-                   </tr>
+                       @if($_SESSION["login_ok"])
+                           <td><a href="/bewertung?gerichtid={{$meal["id"]}}">Bewerten?</a></td>
+
+                       @endif
+                    </tr>
                @endforeach
            </table>
             <ul>

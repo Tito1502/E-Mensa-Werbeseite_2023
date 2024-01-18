@@ -102,6 +102,24 @@ function getuserid($email)
 
     return $id;
 }
+
+function dbgetusernamebyid($id)
+{
+    $link = connectdb();
+
+    $statement = mysqli_stmt_init($link);
+    mysqli_stmt_prepare($statement, "Select name from benutzer where id = (?)");
+    mysqli_stmt_bind_param($statement,"i",$id);
+    mysqli_stmt_execute($statement);
+    $res = mysqli_stmt_get_result($statement);
+    $name = mysqli_fetch_all($res);
+
+
+    mysqli_free_result($res);
+    mysqli_close($link);
+
+    return $name;
+}
 function isadmin($email)
 {
     $link = connectdb();

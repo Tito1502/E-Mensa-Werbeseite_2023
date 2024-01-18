@@ -5,6 +5,8 @@ require_once ("../models/allergen.php");
 require_once ("../models/besucher.php");
 require_once ("../models/newsletter_anmeldung.php");
 require_once ("../models/benutzer.php");
+require_once ("../models/bewertung.php");
+require_once ("../models/bewertungen.php");
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -28,6 +30,7 @@ class WerbeseiteController
         if (!isset($_SESSION['login_ok'])){$_SESSION['login_ok'] = false;}
         $_SESSION['target'] = "";
         $_SESSION['login_result_message'] = null;
+
         //default:
         $data = dbget5meals();
         $show = false;
@@ -128,7 +131,12 @@ class WerbeseiteController
 
                 $log = logger();
                 $log->info('Angemeldet ' . $_POST['email']);
-                header('Location: /');
+                if($_SESSION["ratingattemptwologin"])
+                {
+                    $_SESSION["ratingattemptwologin"] = false;
+                    header('Location: /bewertung');
+                }
+                else header('Location: /');
             }
             else
             {
@@ -218,4 +226,50 @@ class WerbeseiteController
         return view("homepage.wunschgericht");
     }
 
+    function bewertung(RequestData $rq)
+    {
+        session_start();
+
+        echo "dump rq <br>";
+        var_dump($rq);
+        echo "<br> dump post <br>";
+        var_dump($_POST);
+        echo "<br>";
+        $gerichtid = $rq->getPostData()['gerichtid']??1;
+
+        if($_POST != NULL)
+        {
+            echo "<br>";
+            $_POST["gerichtID"] = $gerichtid;
+            $_POST["benutzerID"] = $_SESSION["userID"];
+            echo "<br> dump post again <br>";
+            var_dump($_POST);
+            dbinsertrating($_POST);
+            header("Location: /");
+        }
+
+        if(!$_SESSION["login_ok"])
+        {
+            if(!isset($_SESSION["ratingattemptwologin"]))$_SESSION["ratingattemptwologin"] = true;
+            return view("homepage.anmeldung");
+        }
+        else return view("homepage.bewertung");
+    }
+
+    function bewertungen()
+    {
+        session_start();
+        $ratings2 = dbget30ratingswith_gid_uid();
+
+        return view("homepage.bewertungen",
+            ['rs' => $ratings2]);
+    }
+
+    function meinebewertungen()
+    {
+        session_start();
+        $myratings = dbgetmyratingsall($_SESSION["userID"]);
+
+        return view("homepage.meinebewertungen",["myrts" => $myratings]);
+    }
 }
