@@ -230,20 +230,12 @@ class WerbeseiteController
     {
         session_start();
 
-        echo "dump rq <br>";
-        var_dump($rq);
-        echo "<br> dump post <br>";
-        var_dump($_POST);
-        echo "<br>";
-        $gerichtid = $rq->getPostData()['gerichtid']??1;
-
+        $gerichtid = $rq->getGetData()['gerichtid'];
+        $bildname = dbgetmealpicbyid($gerichtid);
+        $gerichtname = dbgetmealbyid($gerichtid);
         if($_POST != NULL)
         {
-            echo "<br>";
-            $_POST["gerichtID"] = $gerichtid;
             $_POST["benutzerID"] = $_SESSION["userID"];
-            echo "<br> dump post again <br>";
-            var_dump($_POST);
             dbinsertrating($_POST);
             header("Location: /");
         }
@@ -253,7 +245,7 @@ class WerbeseiteController
             if(!isset($_SESSION["ratingattemptwologin"]))$_SESSION["ratingattemptwologin"] = true;
             return view("homepage.anmeldung");
         }
-        else return view("homepage.bewertung");
+        else return view("homepage.bewertung", ["bn"=>$bildname["bildname"], "gn"=> $gerichtname["name"], "gid"=> $gerichtid]);
     }
 
     function bewertungen()
@@ -269,6 +261,13 @@ class WerbeseiteController
     {
         session_start();
         $myratings = dbgetmyratingsall($_SESSION["userID"]);
+
+
+        if($_POST != NULL)
+        {
+            dbdelratingbyid($_POST["delete_id"]);
+            header("Location: /meinebewertungen");
+        }
 
         return view("homepage.meinebewertungen",["myrts" => $myratings]);
     }

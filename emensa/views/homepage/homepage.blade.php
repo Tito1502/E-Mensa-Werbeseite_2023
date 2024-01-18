@@ -57,7 +57,6 @@
                        @endif
                        @if($_SESSION["login_ok"])
                            <td><a href="/bewertung?gerichtid={{$meal["id"]}}">Bewerten?</a></td>
-
                        @endif
                     </tr>
                @endforeach
