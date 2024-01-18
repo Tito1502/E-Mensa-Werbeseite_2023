@@ -7,5 +7,7 @@ Create table if not exists bewertungen(
     hervorheben boolean default false,
     gericht_id bigint not null ,
     foreign key (gericht_id) references gericht(id),
-    check ( length(bemerkung)>4 )
+    check ( length(bemerkung)>4 ),
+    benutzer_id bigint not null,
+    foreign key (benutzer_id) references benutzer(id)
 );
