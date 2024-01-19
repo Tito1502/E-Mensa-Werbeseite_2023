@@ -95,6 +95,8 @@ class WerbeseiteController
             }
         }
 
+        $hr = dbselectallratingshighlighted();
+
         var_dump($_SESSION["userID"]);
         var_dump($_SESSION["user"]);
         var_dump($_SESSION["admin"]);
@@ -103,6 +105,7 @@ class WerbeseiteController
             ['meals' => $data,
                 'show' => $show,
                 'codes' => $acodes,
+                'highlightedrating' => $hr,
                 'newslettercount' => $nlcount,
                 'mealcount'=> $mealcount,
                 'visitorcount'=>$viscoutn]
@@ -132,9 +135,6 @@ class WerbeseiteController
                 $_SESSION['userID'] = getuserid($_POST['email']);
                 $_SESSION['admin'] = isadmin($_POST['email']);
 
-                if(isadmin($_POST['email'])==1) echo "ISADMIN";
-                echo "<br>postbeforeupdate<br>";
-                var_dump($_POST);
                 update_user($_POST['email'], true);
 
                 $log = logger();
@@ -238,14 +238,13 @@ class WerbeseiteController
     {
         session_start();
 
-        $gerichtid = $rq->getGetData()['gerichtid']??1;
+        $gerichtid = $rq->getGetData()['gerichtid'];
         $bildname = dbgetmealpicbyid($gerichtid);
         $gerichtname = dbgetmealbyid($gerichtid);
         if($_POST != NULL)
         {
             $_POST["benutzerID"] = $_SESSION["userID"];
-            if($_POST["sternbewertung"]!= NULL && $_POST["bemerkung"]>4) dbinsertrating($_POST);
-            else header("Location: /bewertung");
+            dbinsertrating($_POST);
             header("Location: /");
         }
 

@@ -95,3 +95,34 @@ ORDER BY bew.bewertungszeitpunkt DESC;");
 
     return $names;
 }
+
+function dbselectallratingshighlighted()
+{
+    $link = connectdb();
+
+    $sql = "SELECT * FROM view_hervorgehoben_bewertung;";
+
+    $result = mysqli_query($link, $sql);
+
+    $data = mysqli_fetch_all($result);
+
+    mysqli_free_result($result);
+
+    mysqli_close($link);
+
+    return $data;
+}
+
+function highlight($id)
+{
+    htmlspecialchars($id);
+
+    $link = connectdb();
+
+    $statement = mysqli_stmt_init($link);
+    mysqli_stmt_prepare($statement, "UPDATE bewertungen SET hervorheben = NOT hervorheben WHERE id = ?");
+    mysqli_stmt_bind_param($statement, "i", $id);
+    mysqli_stmt_execute($statement);
+
+    mysqli_close($link);
+}
