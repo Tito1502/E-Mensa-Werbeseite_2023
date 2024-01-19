@@ -3,7 +3,7 @@
 $salt = 'DbWt';
 
 // Das zu verschlüsselnde Passwort
-$password = 'admin';
+$password = 'nutzer';
 
 // Kombiniere Passwort und Salt
 $passwort_mit_salt = $password . $salt;

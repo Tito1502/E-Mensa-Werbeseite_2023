@@ -70,6 +70,29 @@
                 @endif
             </ul>
         </div>
+
+        <div>
+
+            <h2>Meinungen unserer Gäste</h2>
+
+            <table>
+
+                <tr>
+                    <th>Name</th><th>Bemerkung</th><th>Bewertung</th>
+                </tr>
+
+                @foreach($highlightedrating as $rating)
+                    <tr>
+                        <td>{{$rating['0']}}</td>
+                        <td>{{$rating['1']}}</td>
+                        <td>{{$rating['2']}}</td>
+                    </tr>
+                @endforeach
+
+            </table>
+
+        </div>
+
         <div>
             <h2 id="zahlen">E-Mensa in Zahlen</h2>
             <div class="platzhalter">
