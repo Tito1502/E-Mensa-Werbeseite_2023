@@ -7,6 +7,8 @@ require_once ("../models/newsletter_anmeldung.php");
 require_once ("../models/benutzer.php");
 require_once ("../models/bewertung.php");
 require_once ("../models/bewertungen.php");
+require_once('../models/bewertungEQ.php');
+require_once('../models/gerichtEQ.php');
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -248,6 +250,29 @@ class WerbeseiteController
         else return view("homepage.bewertung", ["bn"=>$bildname["bildname"], "gn"=> $gerichtname["name"], "gid"=> $gerichtid]);
     }
 
+    function bewertungEQ(RequestData $rq)
+    {
+        session_start();
+
+        $gerichtid = $rq->getGetData()['gerichtid'];
+        $bildname = gerichtEQ::query()->find($gerichtid)->bildname;
+        $gerichtname = gerichtEQ::query()->find($gerichtid)->name;
+        if($_POST != NULL)
+        {
+            $_POST["benutzerID"] = $_SESSION["userID"];
+            dbinsertrating($_POST);
+            header("Location: /");
+        }
+
+        if(!$_SESSION["login_ok"])
+        {
+            if(!isset($_SESSION["ratingattemptwologin"]))$_SESSION["ratingattemptwologin"] = true;
+            return view("homepage.anmeldung");
+        }
+        else return view("homepage.bewertung", ["bn"=>$bildname, "gn"=> $gerichtname, "gid"=> $gerichtid]);
+    }
+
+
     function bewertungen()
     {
         session_start();
@@ -256,6 +281,7 @@ class WerbeseiteController
         return view("homepage.bewertungen",
             ['rs' => $ratings2]);
     }
+
 
     function meinebewertungen()
     {
@@ -266,6 +292,22 @@ class WerbeseiteController
         if($_POST != NULL)
         {
             dbdelratingbyid($_POST["delete_id"]);
+            header("Location: /meinebewertungen");
+        }
+
+        return view("homepage.meinebewertungen",["myrts" => $myratings]);
+    }
+
+    function meinebewertungenEQ()
+    {
+        session_start();
+        $myratings = dbgetmyratingsall($_SESSION["userID"]);
+
+
+        if($_POST != NULL)
+        {
+            bewertungEQ::destroy($_POST["delete_id"]);
+            //dbdelratingbyid($_POST["delete_id"]);
             header("Location: /meinebewertungen");
         }
 
