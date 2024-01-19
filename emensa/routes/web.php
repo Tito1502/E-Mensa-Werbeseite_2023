@@ -13,9 +13,7 @@ return array(
     '/anmeldung_verifizieren' => "WerbeseiteController@anmeldung_verifizieren",
     '/abmeldung' => "WerbeseiteController@abmeldung",
     '/wunschgericht' => "WerbeseiteController@wunschgericht",
-    '/bewertungen' => "WerbeseiteController@bewertungen",
-    '/bewertung' => "WerbeseiteController@bewertung",
-    '/meinebewertungen' => "WerbeseiteController@meinebewertungen",
+
 
     //'/'             => "HomeController@index",
     "/demo"         => "DemoController@demo",
@@ -30,4 +28,13 @@ return array(
     '/m4_7b_kategorie' => 'ExampleController@m4_7b_kategorie',
     '/m4_7c_gerichte' => 'ExampleController@m4_7c_gerichte',
     '/m4_7d_layout' => 'ExampleController@m4_7d_layout',
+/*
+    '/bewertungen' => "WerbeseiteController@bewertungen",
+    '/bewertung' => "WerbeseiteController@bewertung",
+    '/meinebewertungen' => "WerbeseiteController@meinebewertungen",
+    */
+    '/bewertungen' => "WerbeseiteController@bewertungen",
+    '/bewertung' => "WerbeseiteController@bewertungEQ",
+    '/meinebewertungen' => "WerbeseiteController@meinebewertungenEQ",
+
 );

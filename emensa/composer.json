@@ -5,6 +5,7 @@
     "require": {
         "eftec/bladeone": "^4.1",
         "ext-mysqli": "*",
-        "monolog/monolog": "^3.5"
+        "monolog/monolog": "^3.5",
+        "illuminate/database": "^10.41"
     }
 }

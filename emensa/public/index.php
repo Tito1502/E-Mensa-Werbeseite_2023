@@ -5,6 +5,9 @@ const CONFIG_WEBROUTES = "/../routes/web.php"; // like in laravel
 const CONFIG_DB = "/../config/db.php";
 const ROUTER_VERSION = '0.8.2';
 
+require_once "../vendor/autoload.php";
+include "../config/orm.php";
+
 assert_php_version('8.2.0');
 assert_path();
 
