@@ -3,8 +3,17 @@
 
 function update_user($email, $success)
 {
+    echo"<br>";
+    var_dump($email);
+
+    echo"<br>";
     $link = connectdb();
     $id = getuserid($email);
+
+    echo"<br>id<br>";
+    var_dump($id);
+
+    echo"<br>";
     mysqli_begin_transaction($link);
     $statement = mysqli_stmt_init($link);
     if ($success) {
@@ -90,14 +99,13 @@ function getuserid($email)
     $link = connectdb();
 
     $statement = mysqli_stmt_init($link);
-    mysqli_stmt_prepare($statement, "Select id from benutzer where email = (?)");
+    mysqli_stmt_prepare($statement, "SELECT id FROM benutzer WHERE email = ?");
     mysqli_stmt_bind_param($statement, "s", $email);
     mysqli_stmt_execute($statement);
-    $res = mysqli_stmt_get_result($statement);
-    $id = mysqli_fetch_all($res);
+    mysqli_stmt_bind_result($statement, $id);
+    mysqli_stmt_fetch($statement);
 
-
-    mysqli_free_result($res);
+    mysqli_stmt_close($statement);
     mysqli_close($link);
 
     return $id;

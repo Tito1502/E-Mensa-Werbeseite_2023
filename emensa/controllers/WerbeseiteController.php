@@ -93,6 +93,9 @@ class WerbeseiteController
             }
         }
 
+        var_dump($_SESSION["userID"]);
+        var_dump($_SESSION["user"]);
+        var_dump($_SESSION["admin"]);
         return view
         ('homepage.homepage',
             ['meals' => $data,
@@ -127,6 +130,9 @@ class WerbeseiteController
                 $_SESSION['userID'] = getuserid($_POST['email']);
                 $_SESSION['admin'] = isadmin($_POST['email']);
 
+                if(isadmin($_POST['email'])==1) echo "ISADMIN";
+                echo "<br>postbeforeupdate<br>";
+                var_dump($_POST);
                 update_user($_POST['email'], true);
 
                 $log = logger();
@@ -230,13 +236,14 @@ class WerbeseiteController
     {
         session_start();
 
-        $gerichtid = $rq->getGetData()['gerichtid'];
+        $gerichtid = $rq->getGetData()['gerichtid']??1;
         $bildname = dbgetmealpicbyid($gerichtid);
         $gerichtname = dbgetmealbyid($gerichtid);
         if($_POST != NULL)
         {
             $_POST["benutzerID"] = $_SESSION["userID"];
-            dbinsertrating($_POST);
+            if($_POST["sternbewertung"]!= NULL && $_POST["bemerkung"]>4) dbinsertrating($_POST);
+            else header("Location: /bewertung");
             header("Location: /");
         }
 
