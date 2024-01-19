@@ -279,11 +279,17 @@ class WerbeseiteController
     }
 
 
-    function bewertungen()
+    function bewertungen(RequestData $rq)
     {
         session_start();
         $ratings2 = dbget30ratingswith_gid_uid();
-
+        if(isset($_GET['HL']))
+        {
+            $var = $rq->getGETData()['HL'];
+            var_dump($var);
+            highlight($rq->getGetData()['HL']);
+            header('Location: /bewertungen');
+        }
         return view("homepage.bewertungen",
             ['rs' => $ratings2]);
     }
