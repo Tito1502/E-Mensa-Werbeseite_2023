@@ -137,8 +137,11 @@ function isadmin($email)
     mysqli_stmt_bind_param($statement, "s", $email);
     mysqli_stmt_execute($statement);
     $res = mysqli_stmt_get_result($statement);
-    $admin = mysqli_fetch_all($res);
+    // Fetch only the associative array
+    $adminData = mysqli_fetch_assoc($res);
 
+    // Extract the 'admin' value
+    $admin = isset($adminData['admin']) ? $adminData['admin'] : null;
 
     mysqli_free_result($res);
     mysqli_close($link);

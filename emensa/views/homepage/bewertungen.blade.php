@@ -14,7 +14,7 @@
             <td>{{$r["bewertungszeitpunkt"]}}</td>
             <td>{{$r["gericht_name"]}}</td>
             <td>{{$r["benutzer_name"]}}</td>
-            @if($_SESSION['admin'])
+            @if($_SESSION['admin'] == 1)
                 @if($r['hervorheben'] == 0)
                     <td><a href="/bewertungen?HL={{$r['id']}}">Hervorheben</a></td>
                     {{--<td><button type="submit" name="hervorheben" value="{{$r['id']}}">Hervorheben</button></td>--}}

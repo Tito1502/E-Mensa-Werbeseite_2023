@@ -100,6 +100,8 @@ class WerbeseiteController
         var_dump($_SESSION["userID"]);
         var_dump($_SESSION["user"]);
         var_dump($_SESSION["admin"]);
+
+
         return view
         ('homepage.homepage',
             ['meals' => $data,
@@ -283,6 +285,13 @@ class WerbeseiteController
     {
         session_start();
         $ratings2 = dbget30ratingswith_gid_uid();
+        $isadmin = isadmin($_SESSION["user"]);
+        $_SESSION["admin"] = $isadmin;
+
+        var_dump($_SESSION);
+        var_dump($isadmin);
+
+
         if(isset($_GET['HL']))
         {
             $var = $rq->getGETData()['HL'];
