@@ -33,7 +33,7 @@ return array(
     '/bewertung' => "WerbeseiteController@bewertung",
     '/meinebewertungen' => "WerbeseiteController@meinebewertungen",
     */
-    '/bewertungen' => "WerbeseiteController@bewertungen",
+    '/bewertungen' => "WerbeseiteController@bewertungenEQ",
     '/bewertung' => "WerbeseiteController@bewertungEQ",
     '/meinebewertungen' => "WerbeseiteController@meinebewertungenEQ",
 

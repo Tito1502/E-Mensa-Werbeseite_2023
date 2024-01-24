@@ -22,10 +22,27 @@ function logger(): Logger
 
     return $log;
 }
+
+function add_gericht(): void
+{
+    $gericht = new gerichtEQ();
+    $gericht->id = 50;
+    $gericht->name = 'test';
+    $gericht->beschreibung = "sfesdfsfs";
+    $gericht->erfasst_am = "2020-08-25";
+    $gericht->vegetarisch = "Yes";
+    $gericht->vegen = "Nein";
+    $gericht->preisintern = 5;
+    $gericht->preisextern = 6.2;
+    $gericht->save();
+}
+
 class WerbeseiteController
 {
     public function index(RequestData $rq)
     {
+        //add_gericht();
+
         $log = logger();
         $log->info('Hauptseite aufgerufen');
         session_start();
@@ -34,7 +51,8 @@ class WerbeseiteController
         $_SESSION['login_result_message'] = null;
 
         //default:
-        $data = dbget5meals();
+        //$data = dbget5meals();
+        $data = gerichtEQ::query()->limit(5)->get();
         $show = false;
         //else
         $isRandom = $rq->getGetData()['israndom'] ?? null;
@@ -297,6 +315,29 @@ class WerbeseiteController
             $var = $rq->getGETData()['HL'];
             var_dump($var);
             highlight($rq->getGetData()['HL']);
+            header('Location: /bewertungen');
+        }
+        return view("homepage.bewertungen",
+            ['rs' => $ratings2]);
+    }
+
+    function bewertungenEQ(RequestData $rq)
+    {
+        session_start();
+        $ratings2 = dbget30ratingswith_gid_uid();
+        if(isset($_GET['HL']))
+        {
+            $bewertung = BewertungEQ::query()->find($rq->getGetData()['HL']);
+            if (BewertungEQ::query()->find($rq->getGetData()['HL'])->hervorheben)
+            {
+                $bewertung->hervorheben = 0;
+                $bewertung->save();
+            }
+            else {
+                $bewertung->hervorheben = 1;
+                $bewertung->save();
+            }
+
             header('Location: /bewertungen');
         }
         return view("homepage.bewertungen",
