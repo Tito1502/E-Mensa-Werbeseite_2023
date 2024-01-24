@@ -306,10 +306,6 @@ class WerbeseiteController
         $isadmin = isadmin($_SESSION["user"]);
         $_SESSION["admin"] = $isadmin;
 
-        var_dump($_SESSION);
-        var_dump($isadmin);
-
-
         if(isset($_GET['HL']))
         {
             $var = $rq->getGETData()['HL'];
@@ -325,6 +321,8 @@ class WerbeseiteController
     {
         session_start();
         $ratings2 = dbget30ratingswith_gid_uid();
+        $isadmin = isadmin($_SESSION["user"]);
+        $_SESSION["admin"] = $isadmin;
         if(isset($_GET['HL']))
         {
             $bewertung = BewertungEQ::query()->find($rq->getGetData()['HL']);
