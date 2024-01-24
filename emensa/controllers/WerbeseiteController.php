@@ -301,6 +301,8 @@ class WerbeseiteController
 
     function bewertungen(RequestData $rq)
     {
+
+        //fertig
         session_start();
         $ratings2 = dbget30ratingswith_gid_uid();
         $isadmin = isadmin($_SESSION["user"]);
